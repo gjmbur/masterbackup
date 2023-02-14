@@ -1,0 +1,2785 @@
+------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/gjmb/Desktop/SOC360fa22/classeg.log
+  log type:  text
+ opened on:   9 Oct 2022, 20:06:30
+
+. use ./data/gss2018, clear
+
+. describe wrkstat
+
+              storage   display    value
+variable name   type    format     label      variable label
+------------------------------------------------------------------------------------------
+wrkstat         byte    %8.0g      LABDE      labor force status
+
+. label list LABDE 
+LABDE:
+           1 working fulltime
+           2 working parttime
+           3 temp not working
+           4 unempl, laid off
+           5 retired
+           6 school
+           7 keeping house
+           8 other
+          .i IAP
+          .n NA
+
+. gen LFP = wrkstat<5
+
+. replace LFP = . if missing(wrkstat)
+(2 real changes made, 2 to missing)
+
+. tab wrkstat LFP, mis
+
+     labor force |               LFP
+          status |         0          1          . |     Total
+-----------------+---------------------------------+----------
+working fulltime |         0      1,134          0 |     1,134 
+working parttime |         0        259          0 |       259 
+temp not working |         0         53          0 |        53 
+unempl, laid off |         0         84          0 |        84 
+         retired |       445          0          0 |       445 
+          school |        81          0          0 |        81 
+   keeping house |       242          0          0 |       242 
+           other |        48          0          0 |        48 
+              NA |         0          0          2 |         2 
+-----------------+---------------------------------+----------
+           Total |       816      1,530          2 |     2,348 
+
+. label define LFPlab 0 "not a LFP" 1 "LFP"
+
+. label values LFP LFPlab
+
+. tab LFP
+
+        LFP |      Freq.     Percent        Cum.
+------------+-----------------------------------
+  not a LFP |        816       34.78       34.78
+        LFP |      1,530       65.22      100.00
+------------+-----------------------------------
+      Total |      2,346      100.00
+
+. sum LFP, d
+
+                             LFP
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0              0
+ 5%            0              0
+10%            0              0       Obs               2,346
+25%            0              0       Sum of Wgt.       2,346
+
+50%            1                      Mean           .6521739
+                        Largest       Std. Dev.       .476382
+75%            1              1
+90%            1              1       Variance       .2269398
+95%            1              1       Skewness      -.6390097
+99%            1              1       Kurtosis       1.408333
+
+. di r(mean)*(1-r(mean))*(r(N)/(r(N)-1))
+.22693983
+
+. di r(Var)
+.22693983
+
+. 
+end of do-file
+
+. inspect realrinc
+
+realrinc:  r's income in constant $             Number of Observations
+-----------------------------------    ---------------------------------------
+                                             Total      Integers   Nonintegers
+|  #                         Negative            -             -             -
+|  #                         Zero                -             -             -
+|  #                         Positive        1,363         1,053           310
+|  #                                   -----------   -----------   -----------
+|  #                         Total           1,363         1,053           310
+|  #   #   .   .   .         Missing           985
++----------------------                -----------
+227            151050.7                      2,348
+  (26 unique values)
+
+      realrinc is labeled but 1363 values are NOT documented in the label.
+
+. tab realri
+
+ r's income |
+in constant |
+          $ |      Freq.     Percent        Cum.
+------------+-----------------------------------
+        227 |         33        2.42        2.42
+        908 |         32        2.35        4.77
+       1589 |         32        2.35        7.12
+       2043 |         21        1.54        8.66
+       2497 |         21        1.54       10.20
+       2951 |         12        0.88       11.08
+       3405 |         18        1.32       12.40
+       4086 |         33        2.42       14.82
+     5107.5 |         48        3.52       18.34
+     6242.5 |         46        3.37       21.72
+     7377.5 |         25        1.83       23.55
+     8512.5 |         36        2.64       26.19
+     9647.5 |         61        4.48       30.67
+    10782.5 |         46        3.37       34.04
+      12485 |         73        5.36       39.40
+      14755 |         96        7.04       46.44
+      17025 |         81        5.94       52.38
+      20430 |        136        9.98       62.36
+      24970 |        114        8.36       70.73
+      30645 |        114        8.36       79.09
+      37455 |         81        5.94       85.03
+      45400 |         67        4.92       89.95
+      54480 |         43        3.15       93.10
+      63560 |         32        2.35       95.45
+      72640 |         14        1.03       96.48
+   151050.7 |         48        3.52      100.00
+------------+-----------------------------------
+      Total |      1,363      100.00
+
+. inspect tax
+
+tax:  r's federal income tax                    Number of Observations
+----------------------------           ---------------------------------------
+                                             Total      Integers   Nonintegers
+|  #                         Negative            -             -             -
+|  #                         Zero                -             -             -
+|  #   #                     Positive        1,531         1,531             -
+|  #   #                               -----------   -----------   -----------
+|  #   #                     Total           1,531         1,531             -
+|  #   #   .                 Missing           817
++----------------------                -----------
+1                     3                      2,348
+   (3 unique values)
+
+      tax is labeled and all values are documented in the label.
+
+. help foreach
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local filenames = "BPQ CDQ DUQ FSQ HSQ"
+
+.         foreach file of local filenames { 
+  2.                 import sasxport5 ./data/nahnes/`filenames'_J.XPT, clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged3, nogen
+  4.                 save ./data/nhanes_merged3, replace
+  5.                 }
+invalid 'CDQ' 
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local filenames = BPQ CDQ DUQ FSQ HSQ
+BPQ not found
+r(111);
+
+end of do-file
+
+r(111);
+
+. help foreach
+
+. help loca
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         cd ./data/nhanes
+/Users/gjmb/Desktop/SOC360fa22/data/nhanes
+
+.         local files : dir . files "*"
+
+.         foreach file of local `files' { 
+  2.                 import sasxport5 ./data/nahnes/`filenames'_J.XPT, clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged3, nogen
+  4.                 save ./data/nhanes_merged3, replace
+  5.                 }
+_"HSQ_J.XPT invalid name
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         cd ./data/nhanes
+unable to change to ./data/nhanes
+r(170);
+
+end of do-file
+
+r(170);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir . files "*"
+
+.         foreach file of local `files' { 
+  2.                 import `file', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged3, nogen
+  4.                 save ./data/nhanes_merged3, replace
+  5.                 }
+_"HSQ_J.XPT invalid name
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir . files "*"
+
+.         di `files'
+HSQ_J.XPTFSQ_J.XPTDUQ_J.XPTCDQ_J.XPTBPQ_J.XPT
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir . files "*"
+
+.         di `files'
+HSQ_J.XPTFSQ_J.XPTDUQ_J.XPTCDQ_J.XPTBPQ_J.XPT
+
+.         foreach file of local `files' { 
+  2.                 import sasxport5 `file', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged3, nogen
+  4.                 save ./data/nhanes_merged3, replace
+  5.                 }
+_"HSQ_J.XPT invalid name
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir . files "*"
+
+.         di `files'
+HSQ_J.XPTFSQ_J.XPTDUQ_J.XPTCDQ_J.XPTBPQ_J.XPT
+
+.         foreach dataset of local `files' { 
+  2.                 import sasxport5 `dataset', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged3, nogen
+  4.                 save ./data/nhanes_merged3, replace
+  5.                 }
+_"HSQ_J.XPT invalid name
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir . files "*"
+
+.         di `files'
+HSQ_J.XPTFSQ_J.XPTDUQ_J.XPTCDQ_J.XPTBPQ_J.XPT
+
+.         foreach dataset of local `files' { 
+  2.                 import sasxport5 `"`dataset'"', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged3, nogen
+  4.                 save ./data/nhanes_merged3, replace
+  5.                 }
+_"HSQ_J.XPT invalid name
+r(198);
+
+end of do-file
+
+r(198);
+
+. clear all
+
+. import sasxport5 HSQ_J.XPT
+
+.  local test : dir . files "*.XPT"
+
+. 
+. di `test'
+HSQ_J.XPTFSQ_J.XPTDUQ_J.XPTCDQ_J.XPTBPQ_J.XPT
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         capture cd ./data/nhanes
+
+.         local files : dir . files "*"
+
+.         di `files'
+HSQ_J.XPTFSQ_J.XPTDUQ_J.XPTCDQ_J.XPTBPQ_J.XPT
+
+.         foreach sheet of local `files' { 
+  2.                 import sasxport5 `"`sheet'"', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged3, nogen
+  4.                 save ./data/nhanes_merged3, replace
+  5.                 }
+_"HSQ_J.XPT invalid name
+r(198);
+
+end of do-file
+
+r(198);
+
+. help import sasxport5
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir . files "*"
+
+.         di `files'
+HSQ_J.XPTFSQ_J.XPTDUQ_J.XPTCDQ_J.XPTBPQ_J.XPT
+
+.         foreach sheet of local `files' { 
+  2.                 import sasxport5 `sheet', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged3, nogen
+  4.                 save ./data/nhanes_merged3, replace
+  5.                 }
+_"HSQ_J.XPT invalid name
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir . files "*"
+
+.         di `files'
+HSQ_J.XPTFSQ_J.XPTDUQ_J.XPTCDQ_J.XPTBPQ_J.XPT
+
+.         foreach sheet of local `files' { 
+  2.                 di `sheet'
+  3.                                 }
+_"HSQ_J.XPT invalid name
+r(198);
+
+end of do-file
+
+r(198);
+
+. help local
+
+. cd /Users/gjmb/Desktop/SOC360fa22
+/Users/gjmb/Desktop/SOC360fa22
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local list : dir "./data/nhanes" files "*"
+
+.         di `list'
+HSQ_J.XPTFSQ_J.XPTDUQ_J.XPTCDQ_J.XPTBPQ_J.XPT
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local list : dir "./data/nhanes" files "*"
+
+.         di `"`list'"'
+"HSQ_J.XPT" "FSQ_J.XPT" "DUQ_J.XPT" "CDQ_J.XPT" "BPQ_J.XPT"
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir "./data/nhanes" files "*" 
+
+.         foreach sheet of local `"`files'"' { 
+  2.                 import sasxpor5 `"`sheet'"', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged2, nogen
+  4.                 save ./data/nhanes_merged4, replace
+  5.                 }
+local macro name ""HSQ_J.XPT" "FSQ_J.XPT" "DUQ_J.XPT" "CDQ_J.XPT" "BPQ_J.XPT" too long
+r(198);
+
+end of do-file
+
+r(198);
+
+. help filelist
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         ssc install filelist
+checking filelist consistency and verifying not already installed...
+installing into /Users/gjmb/Library/Application Support/Stata/ado/plus/...
+installation complete.
+
+. 
+end of do-file
+
+. help filelist
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir "./data/nhanes" files "*" 
+
+.         foreach sheet of local `"`files'"' { 
+  2.                 import sasxpor5 `"`sheet'"', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged2, nogen
+  4.                 save ./data/nhanes_merged4, replace
+  5.                 }
+_""HSQ_J.XPT" "FSQ_J.XPT" invalid name
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir "./data/nhanes" files "*" 
+
+.         foreach sheet of local `"`files'"' { 
+  2.                 import sasxpor5 `sheet', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged2, nogen
+  4.                 save ./data/nhanes_merged4, replace
+  5.                 }
+_""HSQ_J.XPT" "FSQ_J.XPT" invalid name
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         use ./data/nhanes_merged2, clear
+
+.         import sasxport5  "/Users/gjmb/Desktop/SOC365sp22/original_data/DR1TOT_J.XPT", c
+> lear
+
+.         merge 1:1 seqn using ./data/nhanes_merged2, nogen
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                           550
+        from master                         0  
+        from using                        550  
+
+    matched                             8,704  
+    -----------------------------------------
+
+.         save ./data/nhanes_merged3, replace
+(note: file ./data/nhanes_merged3.dta not found)
+file ./data/nhanes_merged3.dta saved
+
+.         import sasxport5 ./data/DXX_J.xpt, clear
+
+.         merge 1:1 seqn using ./data/nhanes_merged2, nogen
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         4,140
+        from master                         0  
+        from using                      4,140  
+
+    matched                             5,114  
+    -----------------------------------------
+
+.         save ./data/nhanes_merged3, replace
+file ./data/nhanes_merged3.dta saved
+
+.         
+.         import sasxport5 ./data/DXX_J.xpt, clear
+
+.         merge 1:1 seqn using ./data/nhanes_merged2, nogen
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         4,140
+        from master                         0  
+        from using                      4,140  
+
+    matched                             5,114  
+    -----------------------------------------
+
+.         import sasxport5 ./data/FSQ_J.xpt, replace
+file ./data/FSQ_J.xpt not found
+r(601);
+
+end of do-file
+
+r(601);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir "./data/nhanes" files "*" 
+
+.         foreach sheet of local `"`files'"' { 
+  2.                 import sasxpor5 ./data/nhanes/`"`sheet'"', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged2, nogen
+  4.                 save ./data/nhanes_merged4, replace
+  5.                 }
+_""HSQ_J.XPT" "FSQ_J.XPT" invalid name
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir "./data/nhanes" files "*" 
+
+.         foreach sheet of local `"`files'"' { 
+  2.                 import sasxport5 ./data/nhanes/`"`sheet'"', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged2, nogen
+  4.                 save ./data/nhanes_merged4, replace
+  5.                 }
+_""HSQ_J.XPT" "FSQ_J.XPT" invalid name
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir "./data/nhanes" files "*" 
+
+.         foreach sheet of local `"`files'"' { 
+  2.                 import sasxport5 ./data/nhanes/`sheet', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged2, nogen
+  4.                 save ./data/nhanes_merged4, replace
+  5.                 }
+_""HSQ_J.XPT" "FSQ_J.XPT" invalid name
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir "./data/nhanes" files "*" 
+
+.         foreach sheet of local files { 
+  2.                 import sasxport5 ./data/nhanes/`"`sheet'"', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged2, nogen
+  4.                 save ./data/nhanes_merged4, replace
+  5.                 }
+invalid '"HSQ_J.XPT' 
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir "./data/nhanes" files "*" 
+
+.         foreach sheet of local files { 
+  2.                 import sasxport5 ./data/nhanes/`sheet', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged2, nogen
+  4.                 save ./data/nhanes_merged4, replace
+  5.                 }
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                           888
+        from master                         0  
+        from using                        888  
+
+    matched                             8,366  
+    -----------------------------------------
+(note: file ./data/nhanes_merged4.dta not found)
+file ./data/nhanes_merged4.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             9,254  
+    -----------------------------------------
+file ./data/nhanes_merged4.dta saved
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir "./data/nhanes" files "*" 
+
+.         foreach sheet of local files { 
+  2.                 import sasxport5 ./data/nhanes/`sheet', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged2, nogen
+  4.                 save ./data/nhanes_merged4, replace
+  5.                 }
+file ./data/nhanes/.DS_Store not .xpt format
+r(610);
+
+end of do-file
+
+r(610);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir "./data/nhanes" files "*XPT" 
+
+.         foreach sheet of local files { 
+  2.                 import sasxport5 ./data/nhanes/`sheet', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged2, nogen
+  4.                 save ./data/nhanes_merged4, replace
+  5.                 }
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         4,682
+        from master                         0  
+        from using                      4,682  
+
+    matched                             4,572  
+    -----------------------------------------
+file ./data/nhanes_merged4.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         5,372
+        from master                         0  
+        from using                      5,372  
+
+    matched                             3,882  
+    -----------------------------------------
+file ./data/nhanes_merged4.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         3,093
+        from master                         0  
+        from using                      3,093  
+
+    matched                             6,161  
+    -----------------------------------------
+file ./data/nhanes_merged4.dta saved
+
+. 
+.         
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local files : dir "./data/nhanes" files "*XPT" 
+
+.         foreach sheet of local files { 
+  2.                 import sasxport5 ./data/nhanes/`sheet', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged2, nogen
+  4.                 save ./data/nhanes_merged4, replace
+  5.                 }
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                           550
+        from master                         0  
+        from using                        550  
+
+    matched                             8,704  
+    -----------------------------------------
+file ./data/nhanes_merged4.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             9,254  
+    -----------------------------------------
+file ./data/nhanes_merged4.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         6,275
+        from master                         0  
+        from using                      6,275  
+
+    matched                             2,979  
+    -----------------------------------------
+file ./data/nhanes_merged4.dta saved
+
+. 
+.         
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         
+. 
+.         local files : dir "./data/nhanes" files "*XPT" 
+
+.         foreach sheet of local files { 
+  2.                 import sasxport5 ./data/nhanes/`sheet', clear
+  3.                 merge 1:1 seqn using ./data/nhanes_merged4, nogen
+  4.                 save ./data/nhanes_merged4, replace
+  5.                 }
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                           550
+        from master                         0  
+        from using                        550  
+
+    matched                             8,704  
+    -----------------------------------------
+file ./data/nhanes_merged4.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             9,254  
+    -----------------------------------------
+file ./data/nhanes_merged4.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         6,275
+        from master                         0  
+        from using                      6,275  
+
+    matched                             2,979  
+    -----------------------------------------
+file ./data/nhanes_merged4.dta saved
+
+. 
+.         
+. 
+end of do-file
+
+. tab ridre
+ridre ambiguous abbreviation
+r(111);
+
+. tab ridreth3
+
+Race/Hispan |
+  ic origin |
+w/ NH Asian |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      1,367       14.77       14.77
+          2 |        820        8.86       23.63
+          3 |      3,150       34.04       57.67
+          4 |      2,115       22.85       80.53
+          6 |      1,168       12.62       93.15
+          7 |        634        6.85      100.00
+------------+-----------------------------------
+      Total |      9,254      100.00
+
+. bysort ridreth3: sum urxupb
+
+------------------------------------------------------------------------------------------
+-> ridreth3 = 1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      urxupb |        382    .4553141    .6154658        .02       5.99
+
+------------------------------------------------------------------------------------------
+-> ridreth3 = 2
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      urxupb |        209     .328134    .2885205        .03        1.7
+
+------------------------------------------------------------------------------------------
+-> ridreth3 = 3
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      urxupb |        778    .4303985     .549396        .02       8.25
+
+------------------------------------------------------------------------------------------
+-> ridreth3 = 4
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      urxupb |        554    .5066426    .5357136        .03       6.64
+
+------------------------------------------------------------------------------------------
+-> ridreth3 = 6
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      urxupb |        318    .4465723     1.12993        .02      19.34
+
+------------------------------------------------------------------------------------------
+-> ridreth3 = 7
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      urxupb |        164    .3589024    .3645874        .02       3.02
+
+
+. tab ridreth1
+
+Race/Hispan |
+  ic origin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      1,367       14.77       14.77
+          2 |        820        8.86       23.63
+          3 |      3,150       34.04       57.67
+          4 |      2,115       22.85       80.53
+          5 |      1,802       19.47      100.00
+------------+-----------------------------------
+      Total |      9,254      100.00
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         label define race 1 "Mex-Am" 2 "'other Hisp.'" 3 "NH white" ///
+>                 4 "NH Black" 5 "'other race'/mult."
+
+.         label values ridreth1 race
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table ridreth1, c(mean urxupb)
+
+---------------------------------
+Race/Hispanic      |
+origin             | mean(urxupb)
+-------------------+-------------
+            Mex-Am |    .45531414
+     'other Hisp.' |    .32813397
+          NH white |    .43039846
+          NH Black |     .5066426
+'other race'/mult. |    .41674274
+---------------------------------
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         egen SBP = rowmean(bpxs*)
+(2,537 missing values generated)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table ridreth1, c(mean SBP)
+
+-------------------------------
+Race/Hispanic      |
+origin             |  mean(SBP)
+-------------------+-----------
+            Mex-Am |   118.5496
+     'other Hisp.' |   120.9486
+          NH white |   121.8202
+          NH Black |   125.3901
+'other race'/mult. |   119.6765
+-------------------------------
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table ridreth1, c(mean urxucd)
+
+---------------------------------
+Race/Hispanic      |
+origin             | mean(urxucd)
+-------------------+-------------
+            Mex-Am |    .17812644
+     'other Hisp.' |    .20803734
+          NH white |    .23638998
+          NH Black |    .29762754
+'other race'/mult. |    .27211478
+---------------------------------
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         egen urinemetals = rowmean(urx*)
+(6,446 missing values generated)
+
+.         vers 16: table ridreth1, c(mean urxucd)
+
+---------------------------------
+Race/Hispanic      |
+origin             | mean(urxucd)
+-------------------+-------------
+            Mex-Am |    .17812644
+     'other Hisp.' |    .20803734
+          NH white |    .23638998
+          NH Black |    .29762754
+'other race'/mult. |    .27211478
+---------------------------------
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table ridreth1, c(mean urinemetals)
+
+-----------------------------------
+Race/Hispanic      |
+origin             | mean(urinem~s)
+-------------------+---------------
+            Mex-Am |       6.852281
+     'other Hisp.' |        6.66827
+          NH white |       5.957858
+          NH Black |       6.672264
+'other race'/mult. |       6.437768
+-----------------------------------
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         graph hbar urinemetals, over(ridreth1) title("Mean metals (&\mu g)/L by race") /
+> //
+>                 b1title("Did {it:r} vote in the 2012 US presidential election?") ///
+>                 asyvars ylab(0(10)70) ///
+>                 note("Source: GSS 2018, {it:n} = `r(N)'" "Eligible voters only")
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         graph hbar urinemetals, over(ridreth1) title("Mean metals (&\mu g)/L by race") /
+> //
+>                 b1title("Did {it:r} vote in the 2012 US presidential election?") ///
+>                 asyvars ylab(0(10)70) bar(1, color(red%30)) ///
+>                 note("Source: GSS 2018, {it:n} = `r(N)'" "Eligible voters only")
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         graph hbar urinemetals, over(ridreth1) title("Mean metals (&\mu g)/L by race") /
+> //
+>                 b1title("Did {it:r} vote in the 2012 US presidential election?") ///
+>                  ylab(0(10)70) bar(1, color(red%30)) ///
+>                 note("Source: GSS 2018, {it:n} = `r(N)'" "Eligible voters only")
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table ridreth1, c(mean urinemetals)
+
+-----------------------------------
+Race/Hispanic      |
+origin             | mean(urinem~s)
+-------------------+---------------
+            Mex-Am |       6.852281
+     'other Hisp.' |        6.66827
+          NH white |       5.957858
+          NH Black |       6.672264
+'other race'/mult. |       6.437768
+-----------------------------------
+
+. 
+end of do-file
+
+. di r(N)
+9254
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table ridreth1, c(mean urinemetals)
+
+-----------------------------------
+Race/Hispanic      |
+origin             | mean(urinem~s)
+-------------------+---------------
+            Mex-Am |       6.852281
+     'other Hisp.' |        6.66827
+          NH white |       5.957858
+          NH Black |       6.672264
+'other race'/mult. |       6.437768
+-----------------------------------
+
+.         
+.         graph hbar urinemetals, over(ridreth1) title("Mean metals (&\mu g)/L by race") /
+> //
+>                 b1title("Did {it:r} vote in the 2012 US presidential election?") ///
+>                 asyvars bar(1, color(red%30)) bar(1, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(1, color(pink%30))
+
+.                 note("Source: NHANES 2017-18, {it:n} = `r(N)'")
+type mismatch
+r(109);
+
+end of do-file
+
+r(109);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         graph hbar urinemetals, over(ridreth1) title("Mean metals (&\mu g)/L by race") /
+> //
+>                 b1title("Did {it:r} vote in the 2012 US presidential election?") ///
+>                 asyvars bar(1, color(red%30)) bar(1, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(1, color(pink%30)) ///
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'")
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table ridreth1, c(mean urinemetals)
+
+-----------------------------------
+Race/Hispanic      |
+origin             | mean(urinem~s)
+-------------------+---------------
+            Mex-Am |       6.852281
+     'other Hisp.' |        6.66827
+          NH white |       5.957858
+          NH Black |       6.672264
+'other race'/mult. |       6.437768
+-----------------------------------
+
+.         
+.         graph hbar urinemetals, over(ridreth1) title("Mean metals (&\mu g)/L by race") /
+> //
+>                 b1title("Did {it:r} vote in the 2012 US presidential election?") ///
+>                 asyvars bar(1, color(red%30)) bar(1, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) ///
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'")
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table ridreth1, c(mean urinemetals)
+
+-----------------------------------
+Race/Hispanic      |
+origin             | mean(urinem~s)
+-------------------+---------------
+            Mex-Am |       6.852281
+     'other Hisp.' |        6.66827
+          NH white |       5.957858
+          NH Black |       6.672264
+'other race'/mult. |       6.437768
+-----------------------------------
+
+.         
+.         graph hbar urinemetals, over(ridreth1) title("Mean metals (&\mu g)/L by race") /
+> //
+>                 b1title("Did {it:r} vote in the 2012 US presidential election?") ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'")
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         graph hbar urinemetals, over(ridreth1) title("Mean metals ({&mu}g)/L by race") /
+> //
+>                 b1title("Did {it:r} vote in the 2012 US presidential election?") ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'")
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         set scheme plottig
+
+.         graph hbar urinemetals, over(ridreth1) title("Mean metals in urine ({&mu}g)/L by
+>  race") ///
+>                 b1title("Did {it:r} vote in the 2012 US presidential election?") ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'")
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         set scheme gg_hue
+
+.         
+.         vers 16: table ridreth1, c(mean urinemetals)
+
+-----------------------------------
+Race/Hispanic      |
+origin             | mean(urinem~s)
+-------------------+---------------
+            Mex-Am |       6.852281
+     'other Hisp.' |        6.66827
+          NH white |       5.957858
+          NH Black |       6.672264
+'other race'/mult. |       6.437768
+-----------------------------------
+
+.         graph hbar urinemetals, over(ridreth1) title("Mean metals in urine ({&mu}g)/L by
+>  race") ///
+>                 b1title("") ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'")
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table ridreth1, c(mean urinemetals)
+
+-----------------------------------
+Race/Hispanic      |
+origin             | mean(urinem~s)
+-------------------+---------------
+            Mex-Am |       6.852281
+     'other Hisp.' |        6.66827
+          NH white |       5.957858
+          NH Black |       6.672264
+'other race'/mult. |       6.437768
+-----------------------------------
+
+.         graph hbar urinemetals, over(ridreth1) title("Mean metals in urine ({&mu}g)/L by
+>  race") ///
+>                 b1title("") ytitle("") ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'")
+
+. 
+end of do-file
+
+. help graph bar
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table ridreth1, c(mean urinemetals)
+
+-----------------------------------
+Race/Hispanic      |
+origin             | mean(urinem~s)
+-------------------+---------------
+            Mex-Am |       6.852281
+     'other Hisp.' |        6.66827
+          NH white |       5.957858
+          NH Black |       6.672264
+'other race'/mult. |       6.437768
+-----------------------------------
+
+.         graph hbar urinemetals, over(ridreth1) title("Mean metals in urine ({&mu}g)/L by
+>  race") ///
+>                 b1title("") ytitle("") sort(#) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'")
+# invalid name
+option sort() incorrectly specified
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table ridreth1, c(mean urinemetals)
+
+-----------------------------------
+Race/Hispanic      |
+origin             | mean(urinem~s)
+-------------------+---------------
+            Mex-Am |       6.852281
+     'other Hisp.' |        6.66827
+          NH white |       5.957858
+          NH Black |       6.672264
+'other race'/mult. |       6.437768
+-----------------------------------
+
+.         graph hbar urinemetals, over(ridreth1) title("Mean metals in urine ({&mu}g)/L by
+>  race") ///
+>                 b1title("") ytitle("") sort(urinemetals) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'")
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table ridreth1, c(mean urinemetals)
+
+-----------------------------------
+Race/Hispanic      |
+origin             | mean(urinem~s)
+-------------------+---------------
+            Mex-Am |       6.852281
+     'other Hisp.' |        6.66827
+          NH white |       5.957858
+          NH Black |       6.672264
+'other race'/mult. |       6.437768
+-----------------------------------
+
+.         graph hbar urinemetals, over(ridreth1, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g)/L by race") ///
+>                 b1title("") ytitle("") ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'")
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table ridreth1, c(mean urinemetals)
+
+-----------------------------------
+Race/Hispanic      |
+origin             | mean(urinem~s)
+-------------------+---------------
+            Mex-Am |       6.852281
+     'other Hisp.' |        6.66827
+          NH white |       5.957858
+          NH Black |       6.672264
+'other race'/mult. |       6.437768
+-----------------------------------
+
+.         graph hbar urinemetals, over(ridreth1, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g)/L by race") ///
+>                 b1title("") ytitle("") legend(box) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'")
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table ridreth1, c(mean urinemetals)
+
+-----------------------------------
+Race/Hispanic      |
+origin             | mean(urinem~s)
+-------------------+---------------
+            Mex-Am |       6.852281
+     'other Hisp.' |        6.66827
+          NH white |       5.957858
+          NH Black |       6.672264
+'other race'/mult. |       6.437768
+-----------------------------------
+
+.         graph hbar urinemetals, over(ridreth1, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g)/L by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'")
+(note:  named style longdash not found in class linestyle, default attributes used)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         gen white = ridreth1 == 3
+
+.         replace white = . if missing(ridreth)
+ridreth ambiguous abbreviation
+r(111);
+
+end of do-file
+
+r(111);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         replace white = . if missing(ridreth1)
+(0 real changes made)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         label define white 0 "non-white" 1 "white"
+
+.         label values white white
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g)/L by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'")
+(note:  named style longdash not found in class linestyle, default attributes used)
+
+.         
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table white, c(mean urinemetals)
+
+--------------------------
+    white | mean(urinem~s)
+----------+---------------
+non-white |       6.641846
+    white |       5.957858
+--------------------------
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g)/L by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'")
+(note:  named style longdash not found in class linestyle, default attributes used)
+
+.         
+. 
+end of do-file
+
+. tab white, sum urine
+option sum incorrectly specified
+r(198);
+
+. tab white, sum(urine)
+
+            |       Summary of urinemetals
+      white |        Mean   Std. Dev.       Freq.
+------------+------------------------------------
+  non-white |   6.6418457   5.8280719       1,890
+      white |   5.9578577   4.8775127         918
+------------+------------------------------------
+      Total |   6.4182342   5.5437243       2,808
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local vars = "urinemetals white"
+
+.         reg `vars'
+
+      Source |       SS           df       MS      Number of obs   =     2,808
+-------------+----------------------------------   F(1, 2806)      =      9.43
+       Model |  289.070917         1  289.070917   Prob > F        =    0.0022
+    Residual |  85978.1211     2,806  30.6408129   R-squared       =    0.0034
+-------------+----------------------------------   Adj R-squared   =    0.0030
+       Total |   86267.192     2,807  30.7328792   Root MSE        =    5.5354
+
+------------------------------------------------------------------------------
+ urinemetals |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       white |   -.683988   .2226878    -3.07   0.002    -1.120636   -.2473396
+       _cons |   6.641846   .1273266    52.16   0.000     6.392182    6.891509
+------------------------------------------------------------------------------
+
+.         matrix coeffs = e(b)
+
+.         local realslope = coeffs[1, 1]
+
+.         local realintercept = coeffs[1, 2]
+
+.         local slope = round(coeffs[1, 1], .01)
+
+.         local intercept = round(coeffs[1, 2], .01)
+
+.         local r = round(sqrt(e(r2)), 0.01)
+
+.         scatter `vars', title("Metals in urine ({&mu}g)/L by race", ///
+>                 size(medium)) mcolor(green%10) || lfit `vars', ///
+>                 legend(off) ytitle("({&mu}g)/L") ///
+>                 text(5.5 75 `"{it:Y} = `slope'{it:X} + `intercept'"' ///
+>                 `"{it:r} = `r'"', box fcolor(white)) 
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'")
+(note:  named style longdash not found in class linestyle, default attributes used)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table white, c(mean urinemetals)
+
+--------------------------
+    white | mean(urinem~s)
+----------+---------------
+non-white |       6.641846
+    white |       5.957858
+--------------------------
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'")
+(note:  named style longdash not found in class linestyle, default attributes used)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local vars = "urinemetals white"
+
+.         reg `vars'
+
+      Source |       SS           df       MS      Number of obs   =     2,808
+-------------+----------------------------------   F(1, 2806)      =      9.43
+       Model |  289.070917         1  289.070917   Prob > F        =    0.0022
+    Residual |  85978.1211     2,806  30.6408129   R-squared       =    0.0034
+-------------+----------------------------------   Adj R-squared   =    0.0030
+       Total |   86267.192     2,807  30.7328792   Root MSE        =    5.5354
+
+------------------------------------------------------------------------------
+ urinemetals |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       white |   -.683988   .2226878    -3.07   0.002    -1.120636   -.2473396
+       _cons |   6.641846   .1273266    52.16   0.000     6.392182    6.891509
+------------------------------------------------------------------------------
+
+.         matrix coeffs = e(b)
+
+.         local realslope = coeffs[1, 1]
+
+.         local realintercept = coeffs[1, 2]
+
+.         local slope = round(coeffs[1, 1], .01)
+
+.         local intercept = round(coeffs[1, 2], .01)
+
+.         local r = round(sqrt(e(r2)), 0.01)
+
+.         scatter `vars', title("Metals in urine ({&mu}g)/L by race", ///
+>                 size(medium)) mcolor(green%10) || lfit `vars', ///
+>                 legend(off) ytitle("({&mu}g)/L") ///
+>                 text(5.5 75 `"{it:Y} = `slope'{it:X} + `intercept'"' ///
+>                 `"{it:r} = `r'"', box fcolor(white)) 
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local vars = "urinemetals white"
+
+.         reg `vars'
+
+      Source |       SS           df       MS      Number of obs   =     2,808
+-------------+----------------------------------   F(1, 2806)      =      9.43
+       Model |  289.070917         1  289.070917   Prob > F        =    0.0022
+    Residual |  85978.1211     2,806  30.6408129   R-squared       =    0.0034
+-------------+----------------------------------   Adj R-squared   =    0.0030
+       Total |   86267.192     2,807  30.7328792   Root MSE        =    5.5354
+
+------------------------------------------------------------------------------
+ urinemetals |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       white |   -.683988   .2226878    -3.07   0.002    -1.120636   -.2473396
+       _cons |   6.641846   .1273266    52.16   0.000     6.392182    6.891509
+------------------------------------------------------------------------------
+
+.         matrix coeffs = e(b)
+
+.         local realslope = coeffs[1, 1]
+
+.         local realintercept = coeffs[1, 2]
+
+.         local slope = round(coeffs[1, 1], .01)
+
+.         local intercept = round(coeffs[1, 2], .01)
+
+.         local r = round(sqrt(e(r2)), 0.01)
+
+.         scatter `vars', title("Metals in urine ({&mu}g)/L by race", ///
+>                 size(medium)) mcolor(green%10) || lfit `vars', ///
+>                 legend(off) ytitle("({&mu}g)/L") ///
+>                 text(60 0.2 `"{it:Y} = `slope'{it:X} + `intercept'"' ///
+>                 `"{it:r} = `r'"', box fcolor(white)) 
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local vars = "urinemetals white"
+
+.         reg `vars'
+
+      Source |       SS           df       MS      Number of obs   =     2,808
+-------------+----------------------------------   F(1, 2806)      =      9.43
+       Model |  289.070917         1  289.070917   Prob > F        =    0.0022
+    Residual |  85978.1211     2,806  30.6408129   R-squared       =    0.0034
+-------------+----------------------------------   Adj R-squared   =    0.0030
+       Total |   86267.192     2,807  30.7328792   Root MSE        =    5.5354
+
+------------------------------------------------------------------------------
+ urinemetals |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       white |   -.683988   .2226878    -3.07   0.002    -1.120636   -.2473396
+       _cons |   6.641846   .1273266    52.16   0.000     6.392182    6.891509
+------------------------------------------------------------------------------
+
+.         matrix coeffs = e(b)
+
+.         local realslope = coeffs[1, 1]
+
+.         local realintercept = coeffs[1, 2]
+
+.         local slope = round(coeffs[1, 1], .01)
+
+.         local intercept = round(coeffs[1, 2], .01)
+
+.         local r = round(sqrt(e(r2)), 0.01)
+
+.         scatter `vars', title("Metals in urine ({&mu}g)/L by race", ///
+>                 size(medium)) mcolor(green%10) || lfit `vars', ///
+>                 legend(off) ytitle("({&mu}g)/L") ///
+>                 text(50 0.2 `"{it:Y} = `slope'{it:X} + `intercept'"' ///
+>                 `"{it:r} = `r'"', box fcolor(white)) 
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local vars = "urinemetals white"
+
+.         reg `vars'
+
+      Source |       SS           df       MS      Number of obs   =     2,808
+-------------+----------------------------------   F(1, 2806)      =      9.43
+       Model |  289.070917         1  289.070917   Prob > F        =    0.0022
+    Residual |  85978.1211     2,806  30.6408129   R-squared       =    0.0034
+-------------+----------------------------------   Adj R-squared   =    0.0030
+       Total |   86267.192     2,807  30.7328792   Root MSE        =    5.5354
+
+------------------------------------------------------------------------------
+ urinemetals |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       white |   -.683988   .2226878    -3.07   0.002    -1.120636   -.2473396
+       _cons |   6.641846   .1273266    52.16   0.000     6.392182    6.891509
+------------------------------------------------------------------------------
+
+.         matrix coeffs = e(b)
+
+.         local realslope = coeffs[1, 1]
+
+.         local realintercept = coeffs[1, 2]
+
+.         local slope = round(coeffs[1, 1], .01)
+
+.         local intercept = round(coeffs[1, 2], .01)
+
+.         local r = round(sqrt(e(r2)), 0.01)
+
+.         scatter `vars', title("Metals in urine ({&mu}g)/L by race", ///
+>                 size(medium)) mcolor(green%10) || lfit `vars', ///
+>                 legend(off) ytitle("({&mu}g)/L") ///
+>                 text(50 0.2 `"{it:Y} = `slope'{it:X} + 6.64"' ///
+>                 `"{it:r} = `r'"', box fcolor(white)) 
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local vars = "urinemetals white"
+
+.         reg `vars'
+
+      Source |       SS           df       MS      Number of obs   =     2,808
+-------------+----------------------------------   F(1, 2806)      =      9.43
+       Model |  289.070917         1  289.070917   Prob > F        =    0.0022
+    Residual |  85978.1211     2,806  30.6408129   R-squared       =    0.0034
+-------------+----------------------------------   Adj R-squared   =    0.0030
+       Total |   86267.192     2,807  30.7328792   Root MSE        =    5.5354
+
+------------------------------------------------------------------------------
+ urinemetals |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       white |   -.683988   .2226878    -3.07   0.002    -1.120636   -.2473396
+       _cons |   6.641846   .1273266    52.16   0.000     6.392182    6.891509
+------------------------------------------------------------------------------
+
+.         matrix coeffs = e(b)
+
+.         local realslope = coeffs[1, 1]
+
+.         local realintercept = coeffs[1, 2]
+
+.         local slope = round(coeffs[1, 1], .01)
+
+.         local intercept = round(coeffs[1, 2], .01)
+
+.         local r = round(sqrt(e(r2)), 0.01)
+
+.         scatter `vars', title("Metals in urine ({&mu}g)/L by race", ///
+>                 size(medium)) mcolor(green%10) || lfit `vars', ///
+>                 legend(off) ytitle("({&mu}g)/L") ///
+>                 text(50 0.2 `"{it:Y} = `slope'{it:X} + 6.64"' ///
+>                 `"{it:r} = `r'"', box fcolor(white)) ylab(0(5)60)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local vars = "urinemetals white"
+
+.         reg `vars'
+
+      Source |       SS           df       MS      Number of obs   =     2,808
+-------------+----------------------------------   F(1, 2806)      =      9.43
+       Model |  289.070917         1  289.070917   Prob > F        =    0.0022
+    Residual |  85978.1211     2,806  30.6408129   R-squared       =    0.0034
+-------------+----------------------------------   Adj R-squared   =    0.0030
+       Total |   86267.192     2,807  30.7328792   Root MSE        =    5.5354
+
+------------------------------------------------------------------------------
+ urinemetals |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       white |   -.683988   .2226878    -3.07   0.002    -1.120636   -.2473396
+       _cons |   6.641846   .1273266    52.16   0.000     6.392182    6.891509
+------------------------------------------------------------------------------
+
+.         matrix coeffs = e(b)
+
+.         local realslope = coeffs[1, 1]
+
+.         local realintercept = coeffs[1, 2]
+
+.         local slope = round(coeffs[1, 1], .01)
+
+.         local intercept = round(coeffs[1, 2], .01)
+
+.         local r = round(sqrt(e(r2)), 0.01)
+
+.         scatter `vars', title("Metals in urine ({&mu}g)/L by race", ///
+>                 size(medium)) mcolor(green%10) || lfit `vars', ///
+>                 legend(off) xtitle("") ytitle("({&mu}g)/L") ///
+>                 text(50 0.2 `"{it:Y} = `slope'{it:X} + 6.64"' ///
+>                 `"{it:r} = `r'"', box fcolor(white)) ylab(0(5)60, 0 "non-white" 1 "white
+> ")
+option 0 not allowed
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local vars = "urinemetals white"
+
+.         reg `vars'
+
+      Source |       SS           df       MS      Number of obs   =     2,808
+-------------+----------------------------------   F(1, 2806)      =      9.43
+       Model |  289.070917         1  289.070917   Prob > F        =    0.0022
+    Residual |  85978.1211     2,806  30.6408129   R-squared       =    0.0034
+-------------+----------------------------------   Adj R-squared   =    0.0030
+       Total |   86267.192     2,807  30.7328792   Root MSE        =    5.5354
+
+------------------------------------------------------------------------------
+ urinemetals |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       white |   -.683988   .2226878    -3.07   0.002    -1.120636   -.2473396
+       _cons |   6.641846   .1273266    52.16   0.000     6.392182    6.891509
+------------------------------------------------------------------------------
+
+.         matrix coeffs = e(b)
+
+.         local realslope = coeffs[1, 1]
+
+.         local realintercept = coeffs[1, 2]
+
+.         local slope = round(coeffs[1, 1], .01)
+
+.         local intercept = round(coeffs[1, 2], .01)
+
+.         local r = round(sqrt(e(r2)), 0.01)
+
+.         scatter `vars', title("Metals in urine ({&mu}g)/L by race", ///
+>                 size(medium)) mcolor(green%10) || lfit `vars', ///
+>                 legend(off) xtitle("") ytitle("({&mu}g)/L") ///
+>                 text(50 0.2 `"{it:Y} = `slope'{it:X} + 6.64"' ///
+>                 `"{it:r} = `r'"', box fcolor(white)) ylab(0(5)60, 0 "non-white" 1 "white
+> " add)
+option 0 not allowed
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local vars = "urinemetals white"
+
+.         reg `vars'
+
+      Source |       SS           df       MS      Number of obs   =     2,808
+-------------+----------------------------------   F(1, 2806)      =      9.43
+       Model |  289.070917         1  289.070917   Prob > F        =    0.0022
+    Residual |  85978.1211     2,806  30.6408129   R-squared       =    0.0034
+-------------+----------------------------------   Adj R-squared   =    0.0030
+       Total |   86267.192     2,807  30.7328792   Root MSE        =    5.5354
+
+------------------------------------------------------------------------------
+ urinemetals |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       white |   -.683988   .2226878    -3.07   0.002    -1.120636   -.2473396
+       _cons |   6.641846   .1273266    52.16   0.000     6.392182    6.891509
+------------------------------------------------------------------------------
+
+.         matrix coeffs = e(b)
+
+.         local realslope = coeffs[1, 1]
+
+.         local realintercept = coeffs[1, 2]
+
+.         local slope = round(coeffs[1, 1], .01)
+
+.         local intercept = round(coeffs[1, 2], .01)
+
+.         local r = round(sqrt(e(r2)), 0.01)
+
+.         scatter `vars', title("Metals in urine ({&mu}g)/L by race", ///
+>                 size(medium)) mcolor(green%10) || lfit `vars', ///
+>                 legend(off) xtitle("") ytitle("({&mu}g)/L") ///
+>                 text(50 0.2 `"{it:Y} = `slope'{it:X} + 6.64"' ///
+>                 `"{it:r} = `r'"', box fcolor(white)) ylab(0(5)60) ///
+>                 xlab(0 "non-white" 1 "white")
+
+. 
+end of do-file
+
+. help table
+
+. help bysort
+
+. help forvalues
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table white, c(mean urinemetals)
+
+--------------------------
+    white | mean(urinem~s)
+----------+---------------
+non-white |       6.641846
+    white |       5.957858
+--------------------------
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white = `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 }
+invalid syntax
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 }
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(.8 7 "Y`overline' {subscript:white} = `white0_mean'")
+(note:  named style longdash not found in class linestyle, default attributes used)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = round(r(mean), 0.01)
+  4.                 }
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(10 7 "Y`overline' {subscript:white} = `white0_mean'")
+(note:  named style longdash not found in class linestyle, default attributes used)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = round(r(mean), 0.01)
+  4.                 }
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(1 7 "Y`overline' {subscript:white} = `white0_mean'")
+(note:  named style longdash not found in class linestyle, default attributes used)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local white`i'_mean = 4.2%f `"`white`i'_mean'"'
+  5.                 }
+4.2%f invalid name
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table white, c(mean urinemetals)
+
+--------------------------
+    white | mean(urinem~s)
+----------+---------------
+non-white |       6.641846
+    white |       5.957858
+--------------------------
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local white`i'_mean = 4.2%f `"`white`i'_mean'"'
+  5.                 }
+4.2%f invalid name
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table white, c(mean urinemetals)
+
+--------------------------
+    white | mean(urinem~s)
+----------+---------------
+non-white |       6.641846
+    white |       5.957858
+--------------------------
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display 4.2%f `"`white`i'_mean'"'
+  5.                 }
+4.2%f invalid name
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.2f `"`white`i'_mean'"'
+  5.                 }
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(1 7 "Y`overline' {subscript:non-white} = `w0_mean'") 
+(note:  named style longdash not found in class linestyle, default attributes used)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table white, c(mean urinemetals)
+
+--------------------------
+    white | mean(urinem~s)
+----------+---------------
+non-white |       6.641846
+    white |       5.957858
+--------------------------
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.2f `"`white`i'_mean'"'
+  5.                 di `w`i'_mean'
+  6.                 }
+6.6418457
+5.9578577
+
+.         local overline = uchar(773)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         vers 16: table white, c(mean urinemetals)
+
+--------------------------
+    white | mean(urinem~s)
+----------+---------------
+non-white |       6.641846
+    white |       5.957858
+--------------------------
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 di `w`i'_mean'
+  6.                 }
+6.6418457
+5.9578577
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(1 7 "Y`overline' {subscript:non-white} = `w0_mean_neat'" ///
+>                         "Y`overline' {subscript:white} = `w1_mean_neat'") 
+(note:  named style longdash not found in class linestyle, default attributes used)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(1 7 "Y`overline' {subscript:non-white} = `w0_mean_neat'" ""///
+parentheses do not balance
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(1 7 "Y`overline' {subscript:non-white} = `w0_mean_neat'" ""///
+parentheses do not balance
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(1 7 "Y`overline' {subscript:non-white} = `w0_mean_neat'" "" ///
+>                         "Y`overline' {subscript:white} = `w1_mean_neat'") 
+(note:  named style longdash not found in class linestyle, default attributes used)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(1 7 "Y`overline' {subscript:non-white} = `w0_mean_neat'" " " ///
+>                         "Y`overline' {subscript:white} = `w1_mean_neat'") 
+(note:  named style longdash not found in class linestyle, default attributes used)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(7 7 "Y`overline' {subscript:non-white} = `w0_mean_neat'" " " ///
+>                         "Y`overline' {subscript:white} = `w1_mean_neat'", box fcolor(whi
+> te)) 
+(note:  named style longdash not found in class linestyle, default attributes used)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(7 10 "Y`overline' {subscript:non-white} = `w0_mean_neat'" " " ///
+>                         "Y`overline' {subscript:white} = `w1_mean_neat'", box fcolor(whi
+> te)) 
+(note:  named style longdash not found in class linestyle, default attributes used)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(7 80 "Y`overline' {subscript:non-white} = `w0_mean_neat'" " " ///
+>                         "Y`overline' {subscript:white} = `w1_mean_neat'", box fcolor(whi
+> te)) 
+(note:  named style longdash not found in class linestyle, default attributes used)
+
+. 
+end of do-file
+
+. help text()
+
+. 
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(7 80 "Y`overline' {subscript:non-white} = `w0_mean_neat'" " " ///
+>                         "Y`overline' {subscript:white} = `w1_mean_neat'", size(medsmall)
+>  box fcolor(white)) 
+(note:  named style longdash not found in class linestyle, default attributes used)
+
+.         
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(7 80 "Y`overline' {subscript:non-white} = `w0_mean_neat'" " " ///
+>                         "Y`overline' {subscript:white} = `w1_mean_neat'", size(small) bo
+> x fcolor(white)) 
+(note:  named style longdash not found in class linestyle, default attributes used)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(longdash)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(7 80 "Y`overline' {subscript:non-white} = `w0_mean_neat'" " " ///
+>                         "Y`overline' {subscript:white} = `w1_mean_neat'", size(small) //
+> /
+>                         box(size(1.2)) fcolor(white)) 
+(note:  named style longdash not found in class linestyle, default attributes used)
+option box() not allowed
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(black)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(7 80 "Y`overline' {subscript:non-white} = `w0_mean_neat'" " " ///
+>                         "Y`overline' {subscript:white} = `w1_mean_neat'", size(small) //
+> /
+>                         box(size(1.2)) fcolor(white)) 
+(note:  named style black not found in class linestyle, default attributes used)
+option box() not allowed
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(black)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(7 80 "Y`overline' {subscript:non-white} = `w0_mean_neat'" " " ///
+>                         "Y`overline' {subscript:white} = `w1_mean_neat'", size(small)) f
+> color(white)) 
+(note:  named style black not found in class linestyle, default attributes used)
+option fcolor() not allowed
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(black)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(7 80 "Y`overline' {subscript:non-white} = `w0_mean_neat'" " " ///
+>                         "Y`overline' {subscript:white} = `w1_mean_neat'", size(small) fc
+> olor(white)) 
+(note:  named style black not found in class linestyle, default attributes used)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(black)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(7 80 "Y`overline' {subscript:non-white} = `w0_mean_neat'" " " ///
+>                         "Y`overline' {subscript:white} = `w1_mean_neat'", box size(small
+> ) fcolor(white)) 
+(note:  named style black not found in class linestyle, default attributes used)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(black)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(7 80 "Y`overline' {subscript:non-white} = `w0_mean_neat'" " " ///
+>                         "Y`overline' {subscript:white} = `w1_mean_neat'", size(small))
+(note:  named style black not found in class linestyle, default attributes used)
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         forvalues i = 0/1 { 
+  2.                 qui sum urinemetals if white == `i'
+  3.                 local white`i'_mean = r(mean)
+  4.                 local w`i'_mean : display %4.0f `"`white`i'_mean'"'
+  5.                 local  w`i'_mean_neat = strltrim("`: display %10.2f r(mean)'")
+  6.                 di `w`i'_mean_neat'
+  7.                 }
+6.64
+5.96
+
+.         vers 16: table white, c(mean urinemetals)       
+
+--------------------------
+    white | mean(urinem~s)
+----------+---------------
+non-white |       6.641846
+    white |       5.957858
+--------------------------
+
+.         local overline = uchar(773)
+
+.         graph hbar urinemetals, over(white, sort(urinemetals)) ///
+>                 title("Mean metals in urine ({&mu}g/L) by race") ///
+>                 b1title("") ytitle("") ///
+>                 legend(ring(0) region(ls(black)) bplacement(nwest)) ///
+>                 asyvars bar(1, color(red%30)) bar(2, color(green%30)) ///
+>                 bar(3, color(mint%30)) bar(4, color(pink%30)) bar(5, color(orange%30)) /
+> //
+>                 note("Source: NHANES 2017-18, {it:n} = `r(N)'") ///
+>                 text(7 80 "Y`overline' {subscript:non-white} = `w0_mean_neat'" " " ///
+>                         "Y`overline' {subscript:white} = `w1_mean_neat'", size(small))
+(note:  named style black not found in class linestyle, default attributes used)
+
+.         
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD00629.000000"
+
+.         local vars = "urinemetals white"
+
+.         reg `vars'
+
+      Source |       SS           df       MS      Number of obs   =     2,808
+-------------+----------------------------------   F(1, 2806)      =      9.43
+       Model |  289.070917         1  289.070917   Prob > F        =    0.0022
+    Residual |  85978.1211     2,806  30.6408129   R-squared       =    0.0034
+-------------+----------------------------------   Adj R-squared   =    0.0030
+       Total |   86267.192     2,807  30.7328792   Root MSE        =    5.5354
+
+------------------------------------------------------------------------------
+ urinemetals |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       white |   -.683988   .2226878    -3.07   0.002    -1.120636   -.2473396
+       _cons |   6.641846   .1273266    52.16   0.000     6.392182    6.891509
+------------------------------------------------------------------------------
+
+.         matrix coeffs = e(b)
+
+.         local realslope = coeffs[1, 1]
+
+.         local realintercept = coeffs[1, 2]
+
+.         local slope = round(coeffs[1, 1], .01)
+
+.         local intercept = round(coeffs[1, 2], .01)
+
+.         local r = round(sqrt(e(r2)), 0.01)
+
+. 
+end of do-file
+
+. tab rideth1, gen(racedummy)
+variable rideth1 not found
+r(111);
+
+. tab ridreth1, gen(racedummy)
+
+     Race/Hispanic |
+            origin |      Freq.     Percent        Cum.
+-------------------+-----------------------------------
+            Mex-Am |      1,367       14.77       14.77
+     'other Hisp.' |        820        8.86       23.63
+          NH white |      3,150       34.04       57.67
+          NH Black |      2,115       22.85       80.53
+'other race'/mult. |      1,802       19.47      100.00
+-------------------+-----------------------------------
+             Total |      9,254      100.00
+
+. gen mexam = (-1*racedummy2 + -1*racedummy3 + -1*racedummy4 + -1*racedummy5) + 1
+
+. list racedummy1 mexam in 1/50
+
+     +------------------+
+     | racedu~1   mexam |
+     |------------------|
+  1. |        1       1 |
+  2. |        1       1 |
+  3. |        1       1 |
+  4. |        1       1 |
+  5. |        1       1 |
+     |------------------|
+  6. |        1       1 |
+  7. |        1       1 |
+  8. |        1       1 |
+  9. |        1       1 |
+ 10. |        1       1 |
+     |------------------|
+ 11. |        1       1 |
+ 12. |        1       1 |
+ 13. |        1       1 |
+ 14. |        1       1 |
+ 15. |        1       1 |
+     |------------------|
+ 16. |        1       1 |
+ 17. |        1       1 |
+ 18. |        1       1 |
+ 19. |        1       1 |
+ 20. |        1       1 |
+     |------------------|
+ 21. |        1       1 |
+ 22. |        1       1 |
+ 23. |        1       1 |
+ 24. |        1       1 |
+ 25. |        1       1 |
+     |------------------|
+ 26. |        1       1 |
+ 27. |        1       1 |
+ 28. |        1       1 |
+ 29. |        1       1 |
+ 30. |        1       1 |
+     |------------------|
+ 31. |        1       1 |
+ 32. |        1       1 |
+ 33. |        1       1 |
+ 34. |        1       1 |
+ 35. |        1       1 |
+     |------------------|
+ 36. |        1       1 |
+ 37. |        1       1 |
+ 38. |        1       1 |
+ 39. |        1       1 |
+ 40. |        1       1 |
+     |------------------|
+ 41. |        1       1 |
+ 42. |        1       1 |
+ 43. |        1       1 |
+ 44. |        1       1 |
+ 45. |        1       1 |
+     |------------------|
+ 46. |        1       1 |
+ 47. |        1       1 |
+ 48. |        1       1 |
+ 49. |        1       1 |
+ 50. |        1       1 |
+     +------------------+
+
+. count if  racedummy1 ~= mexam 
+  0
+
+. count if  racedummy2 ~= mexam 
+  2,187
+
+. reg urinemetals ib3.rideth1
+variable rideth1 not found
+r(111);
+
+. reg urinemetals ib3.ridreth1
+
+      Source |       SS           df       MS      Number of obs   =     2,808
+-------------+----------------------------------   F(4, 2803)      =      2.72
+       Model |  333.040918         4  83.2602294   Prob > F        =    0.0284
+    Residual |  85934.1511     2,803  30.6579205   R-squared       =    0.0039
+-------------+----------------------------------   Adj R-squared   =    0.0024
+       Total |   86267.192     2,807  30.7328792   Root MSE        =     5.537
+
+-------------------------------------------------------------------------------------
+        urinemetals |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------+----------------------------------------------------------------
+           ridreth1 |
+            Mex-Am  |   .8944232   .3222955     2.78   0.006     .2624627    1.526384
+     'other Hisp.'  |   .7104124   .4007589     1.77   0.076       -.0754    1.496225
+          NH Black  |    .714406    .285262     2.50   0.012     .1550612    1.273751
+'other race'/mult.  |   .4799105   .2944733     1.63   0.103     -.097496    1.057317
+                    |
+              _cons |   5.957858   .1827469    32.60   0.000     5.599526     6.31619
+-------------------------------------------------------------------------------------
+
+. bysort ridreth1: sum urinem
+
+------------------------------------------------------------------------------------------
+-> ridreth1 = Mex-Am
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+ urinemetals |        435    6.852281    6.138623   .4358182    53.2464
+
+------------------------------------------------------------------------------------------
+-> ridreth1 = 'other Hisp.'
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+ urinemetals |        241     6.66827    5.954993   .3372727   54.20236
+
+------------------------------------------------------------------------------------------
+-> ridreth1 = NH white
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+ urinemetals |        918    5.957858    4.877513   .3978182   37.70409
+
+------------------------------------------------------------------------------------------
+-> ridreth1 = NH Black
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+ urinemetals |        639    6.672264    5.237997   .4576364   35.06864
+
+------------------------------------------------------------------------------------------
+-> ridreth1 = 'other race'/mult.
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+ urinemetals |        575    6.437768    6.155489   .4086364   54.91591
+
+
+. di .4799105 +   5.957858  
+6.4377685
+

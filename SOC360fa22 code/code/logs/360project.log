@@ -1,0 +1,964 @@
+----------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/gjmb/Desktop/SOC360fa22/code/logs/360project.log
+  log type:  text
+ opened on:  14 Oct 2022, 17:18:36
+
+.         
+. * I. Two quantitative variables. 
+. 
+.         * Let's look at the relationship between r's education and father's ed.
+. 
+.         * UNIVARIATE ANALYSIS. 
+.         
+.         /* First, we should look at the univariate distribution of each one. Let
+> 's
+>         start with r's education, using numeric and then graphical methods. */
+. 
+.         codebook educ 
+
+----------------------------------------------------------------------------------
+educ                                              highest year of school completed
+----------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  LABAS, but 21 nonmissing values are not labeled
+
+                 range:  [0,20]                       units:  1
+         unique values:  21                       missing .:  0/2,348
+       unique mv codes:  1                       missing .*:  3/2,348
+
+              examples:  12    
+                         12    
+                         14    
+                         16    
+
+.                 
+.                 // This gives some basic information about the variable. 
+. 
+.         tab educ 
+
+    highest |
+    year of |
+     school |
+  completed |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |          4        0.17        0.17
+          1 |          2        0.09        0.26
+          2 |          4        0.17        0.43
+          3 |         10        0.43        0.85
+          4 |          5        0.21        1.07
+          5 |          3        0.13        1.19
+          6 |         20        0.85        2.05
+          7 |          8        0.34        2.39
+          8 |         35        1.49        3.88
+          9 |         51        2.17        6.06
+         10 |         65        2.77        8.83
+         11 |         95        4.05       12.88
+         12 |        657       28.02       40.90
+         13 |        183        7.80       48.70
+         14 |        313       13.35       62.05
+         15 |        127        5.42       67.46
+         16 |        430       18.34       85.80
+         17 |         97        4.14       89.94
+         18 |        119        5.07       95.01
+         19 |         45        1.92       96.93
+         20 |         72        3.07      100.00
+------------+-----------------------------------
+      Total |      2,345      100.00
+
+.         
+.                 // Tabulating the frequencies is OK with highly-discrete quant. 
+> vars. as
+.                 // as means of getting a pictuer of the distribution, but be car
+> eful--
+.                 // this will give massive outputs for other variables, e.g. age.
+>  
+. 
+.         sum educ, detail
+
+              highest year of school completed
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            4              0
+ 5%            9              0
+10%           11              0       Obs               2,345
+25%           12              0       Sum of Wgt.       2,345
+
+50%           14                      Mean           13.73177
+                        Largest       Std. Dev.      2.974313
+75%           16             20
+90%           18             20       Variance       8.846537
+95%           18             20       Skewness      -.4889711
+99%           20             20       Kurtosis       4.628267
+
+.         
+.                 // This prints basic summary statistics for the variable. Report
+> ing the
+.                 // five-number summary, mean, and standard deviation would be gr
+> eat.
+.                 
+.         // Let's now get a first pass at the variable's graphical distribution.
+.         // Later, I show how you can get these into a nice, clean format. 
+. 
+.         * Let's pull up a graph. We'll first look at a histogram. See Lecture 2
+.         * for a detailed analysis of what histograms tell us. 
+.         
+.         hist educ, percent discrete 
+(start=0, width=1)
+
+.                 /* the discrete option tells Stata that we have a variable which
+>  takes
+>                 on a finite or countably infinite number of possible values, and
+>  that 
+>                 those values are appropriate bins for a histogram, making this b
+> asically
+>                 an estimate of the probability mass function (PMF). This is not 
+>                 appropriate for continuous variables, such as age, unless your s
+> ample is
+>                 very discrete (e.g., you have just a few points). */
+. 
+.         /* Now, let's examine r's father's education (we often use father's educ
+> ation 
+>         as a predictor because our society had highly unequal rates of entry int
+> o 
+>         higher education by gender until relatively recently, a feature of our 
+>         stratified social structure. Again, we'll start with numeric analysis. *
+> / 
+. 
+.         codebook paeduc 
+
+----------------------------------------------------------------------------------
+paeduc                                       highest year school completed, father
+----------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  LABAS, but 21 nonmissing values are not labeled
+
+                 range:  [0,20]                       units:  1
+         unique values:  21                       missing .:  0/2,348
+       unique mv codes:  3                       missing .*:  661/2,348
+
+              examples:  11    
+                         12    
+                         16    
+                         .d    dk
+
+.                 /* OK, much more missing data -- that's predictable enough since
+>  some 
+>                 people's parents may be long-since deceased and r may be unable 
+> to 
+>                 estimate the level -- but in your actual case, you may want to i
+> nvestigate
+>                 this a little more in the codebook -- some questions might be pa
+> rt of a 
+>                 "module" that only some respondents answered, which is another r
+> easonable
+>                 cause of missing data -- it's just worth investigating. In this 
+> case, 
+>                 we should consider that dropping these rs may result in us dropp
+> ing 
+>                 disproportionately marginalized respondents. */
+. 
+.         tab paeduc
+
+    highest |
+year school |
+ completed, |
+     father |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |         42        2.49        2.49
+          1 |          1        0.06        2.55
+          2 |         12        0.71        3.26
+          3 |         33        1.96        5.22
+          4 |         15        0.89        6.11
+          5 |         25        1.48        7.59
+          6 |         64        3.79       11.38
+          7 |         33        1.96       13.34
+          8 |        112        6.64       19.98
+          9 |         47        2.79       22.76
+         10 |         54        3.20       25.96
+         11 |         50        2.96       28.93
+         12 |        596       35.33       64.26
+         13 |         55        3.26       67.52
+         14 |        136        8.06       75.58
+         15 |         29        1.72       77.30
+         16 |        238       14.11       91.40
+         17 |         19        1.13       92.53
+         18 |         65        3.85       96.38
+         19 |         13        0.77       97.15
+         20 |         48        2.85      100.00
+------------+-----------------------------------
+      Total |      1,687      100.00
+
+.                 
+.                 // See above for explanations of these techniques. 
+.                 
+.         sum paeduc, detail
+
+            highest year school completed, father
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0              0
+ 5%            3              0
+10%            6              0       Obs               1,687
+25%           10              0       Sum of Wgt.       1,687
+
+50%           12                      Mean           11.88322
+                        Largest       Std. Dev.      4.147774
+75%           14             20
+90%           16             20       Variance       17.20403
+95%           18             20       Skewness      -.6677613
+99%           20             20       Kurtosis       3.669459
+
+. 
+.         hist paeduc, percent discrete 
+(start=0, width=1)
+
+.         
+.         * If we wanted to combine the two histograms, we could write names for t
+> hem....
+.         hist educ, percent discrete name(reduc)
+(start=0, width=1)
+
+.         hist paeduc, percent discrete name(paeduc)
+(start=0, width=1)
+
+.         graph combine paeduc reduc
+
+.         
+.         // Let's move on to some more-advanced graphical techniques. Now, I'll s
+> how
+.         // a means of plotting an estimate of the PDF for each variable. First, 
+.         // we can just get the curves on their own. 
+.         
+.         kdensity educ // this puts education on its own.
+
+.         
+.                 * By the way, the way that kernel density estimation works is mu
+> ch like
+.                 * a moving average: Stata takes basically a moving average of th
+> e height
+.                 * of the actual data (which are necessarily discrete) to get a s
+> mooth
+.                 * curve. It's like a histogram except, much like a moving averag
+> e, an
+.                 * individual point can be counted multiple times. There are also
+>  weights
+.                 * for individual points based on their distance from the center 
+> of the 
+.                 * "window" of the moving average. 
+.                 
+.                 * It is arguably not totally appropriate for a variable we'd pro
+> bably 
+.                 * call discrete, but it is fun to look at. Note that kdensity pl
+> ots are 
+.                 * also sensitive to the underlying mathematical assumptions we u
+> se to 
+.                 * generate them, like histograms. 
+.         
+.         kdensity paeduc  // here's father's education
+
+.         
+.         // In this case, we might even want to combine them since they're measur
+> ed
+.         // on the same scale. NOTE: this is not a bivariate analysis, but 
+.         // merely a way of visualizing the two individual distributions simultan
+> eously, 
+.         // which may not make sense if your variables aren't on the same scale (
+> although
+.         // you can always standardize them if you like). 
+.         
+.         // This analysis can't tell us if the variables are related because ther
+> e is no
+.         // link between Xi and Yi here, unlike, for instance, in a scatterplot. 
+.         
+.         twoway (kdensity educ) (kdensity paeduc) 
+
+.                 // this combines them. Some commands will let you simply enter m
+> ultiple
+.                 // variables as arguments, but if that doesn't work, most plots 
+> can be
+.                 // combine with the -twoway- prefix. 
+.         
+.         // We can also combine these plots with histograms to get some nice grap
+> hs. 
+.         
+.         hist educ, discrete kdensity 
+(start=0, width=1)
+
+.         
+.         hist paeduc, discrete kdensity
+(start=0, width=1)
+
+. 
+.         // Let's look at some more graphical measures of the individual distribu
+> tions.
+.         // Now, we'll focus on box plots. 
+.         
+.         graph box educ
+
+.                 
+.                 /* The most useful thing this does that a histogram does not is 
+> that this
+>                 gives us a way to visually identify the quartiles and outliers. 
+>                 
+>                 Should we drop them? Probably not since it is plausible that som
+> e people 
+>                 simply have very low levels of formal education. We may later wa
+> nt to 
+>                 run regressions with and without them. */ 
+.                 
+.         * See below for an addendum on identifying outliers numerically which us
+> es
+.         * explanation of some slightly more-advanced techniques. Most people wil
+> l 
+.         * simply want to note their presence; the GSS is a pretty "clean" data-s
+> et
+.         * and so most outliers are simply unusual values that should not be chan
+> ged.
+. 
+.         graph box paeduc
+
+. 
+.         * Now, let's compare the two.  
+.         
+.         graph box paeduc educ 
+
+.         
+.         * We can also get this horizontal for (possibly) easier visualization.
+.         
+.         graph hbox paeduc educ
+
+.         
+.         * Finally, combining density curves and box plots is often useful. 
+.         * First, we'll need to install a command. Don't worry -- this is very ea
+> sy
+.         * to do in stata. Most user-written commands are uploaded to the "Boston
+.         * Archive" (technically called the Statistical Software Components archi
+> ve)
+.         * and so we type "ssc install [command]". 
+.         
+.         ssc install vioplot
+checking vioplot consistency and verifying not already installed...
+all files already exist and are up to date.
+
+.                 
+.                 * This won't do any harm if you already have this installed. 
+.         
+.         vioplot educ paeduc, horizontal // horizontal often looks better
+
+.                 
+.                 * We've already explained what these two things do above; here w
+> e just
+.                 * combine the two. 
+. 
+.         * BIVARIATE ANALYSIS. 
+.         
+.         * Let's begin with a simple graphical analysis. For quantitative variabl
+> es,
+.         * that's as easy as just putting up a scatter plot. 
+. 
+.         scatter educ paeduc, jitter(5) 
+
+.         
+.                 * Note two things here. First, the Y-variable comes first in thi
+> s 
+.                 * command's syntax. Second, the jitter option is useful when we 
+> have 
+.                 * discrete data to put a little random noise in there; the numbe
+> r after 
+.                 * "jitter(" tells us what percent of the graph should be noise; 
+> see 
+.                 * "help scatter" for more. 
+.                 
+.         * We could also run a contour plot to simulate the joint density. 
+.                 
+.         ssc install kdens2 // see above about installing
+checking kdens2 consistency and verifying not already installed...
+all files already exist and are up to date.
+
+.         
+.         kdens2 educ paeduc, levels(10) 
+
+.                 
+.                 * These look nice on their own, though it's hard to add a regres
+> sion line.
+.                 * You can generally read this like a literal contour map: more c
+> oncentric
+.                 * circles <--> a taller peak of a three-dimensional density plot
+> . 
+. 
+.         * But, I would recommend at a minimum indluding the scatterplot since th
+> is
+.         * allows us to add a regression line. 
+.         
+.         * We'll give some more analysis when we discuss the numeric aspect of 
+.         * regression; the point of plotting the line is just to give a sense of 
+.         * what the best linear fit is. 
+.         
+.         twoway (scatter educ paeduc, jitter(5)) (lfit educ paeduc)  
+
+.         
+.         * Let's move onto the numeric analysis. First, we'll get r.   
+. 
+.         corr educ paeduc // wow, fairly strong!
+(obs=1,687)
+
+             |     educ   paeduc
+-------------+------------------
+        educ |   1.0000
+      paeduc |   0.4129   1.0000
+
+
+. 
+.         * We can calculate R-squared on its own before we turn to the regression
+>  
+.         * analysis. There are two ways to do this. The first is better from a 
+.         * programming standpoint: we can call the return value from the last 
+.         * command -- we basically ask Stata to do something using its working me
+> mory,
+.         * so to speak. The list of the return values from any command are in its
+.         * help file; just write "help [commandname]"
+.         
+.         * Here, that happens to be "r(rho)". So, we can tell Stata to just squar
+> e
+.         * and return that to us. 
+.         
+.         display r(rho)^2
+.17045629
+
+.                 * note that "disp" turns Stata "into a glorified hand calculator
+> , per 
+.                 * the help file for "display". 
+.                 
+.                 * The alternative is to just copy/paste the value we want, but 1
+> ) this
+.                 * forces more rounding on us than we might want, and 2) the code
+>  is 
+.                 * less elegant since it requires us to manually copy/paste speci
+> fic
+.                 * numeric values into our code. Using "r(rho)" makes it clear wh
+> at we
+.                 * are doing conceptually in a way that is easier to remember if 
+> someone
+.                 * else is looking at your code (or if you come back to it and sa
+> y to 
+.                 * yourself "why the hell is 0.17045629 in my .do-file?"
+. 
+.         * We interpret this as "about 17 percent of the variation in our outcome
+>  
+.         * variable is explained by variation in our predictor". 
+.         
+. 
+.         * We can now turn and look directly at the regression output.
+.         
+.         reg educ paeduc, nohead 
+------------------------------------------------------------------------------
+        educ |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      paeduc |   .2903982   .0156066    18.61   0.000     .2597879    .3210085
+       _cons |   10.67243   .1964226    54.33   0.000     10.28717    11.05769
+------------------------------------------------------------------------------
+
+.                 // The option "nohead" suppresses some output we don't need righ
+> t away.
+.                 
+.         * The coefficient column tells us that for a unit increase in father's e
+> d.,
+.         * we should expect a 0.290 increase in respondent's education. 
+.         
+.         * This is getting a little ahead of ourselves, but the column with the "
+> t" 
+.         * and the "P" will be very important later -- you want a big t-value 
+.         * and a small p-value if you expect there to be a statistically signific
+> ant 
+.         * relationship, which we in fact have! We'll eventually learn what all o
+> f 
+.         * these pieces mean. 
+. 
+.         * We can also briefly look at the full regression output, which prints
+.         * the model, residual, and total sums of squares shown in lecture. 
+.         
+.         reg educ paeduc
+
+      Source |       SS           df       MS      Number of obs   =     1,687
+-------------+----------------------------------   F(1, 1685)      =    346.24
+       Model |  2446.10818         1  2446.10818   Prob > F        =    0.0000
+    Residual |  11904.2463     1,685   7.0648346   R-squared       =    0.1705
+-------------+----------------------------------   Adj R-squared   =    0.1700
+       Total |  14350.3545     1,686  8.51147952   Root MSE        =     2.658
+
+------------------------------------------------------------------------------
+        educ |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      paeduc |   .2903982   .0156066    18.61   0.000     .2597879    .3210085
+       _cons |   10.67243   .1964226    54.33   0.000     10.28717    11.05769
+------------------------------------------------------------------------------
+
+.         
+.         * We notice that MSS/TSS also gives a measure of the goodness-of-fit, wh
+> ich
+.         * we can again calculate just by using return values. Stata doesn't stor
+> e
+.         * the TSS, but since MSS + RSS = TSS, we can calculate it quickly.
+.         
+.         di e(mss) / (e(mss) + e(rss))
+.17045629
+
+.         
+.                 * Note the slightly tricky bit that we now write "e" for program
+> ming
+.                 * reasons that aren't worth going into here. 
+.                 
+.                 /* Incidentally, the link on the following line for interpreting
+>  output 
+>                 is excellent -- I began looking at this page myself back when I 
+>                 understood none of the many pieces of the output.
+>                 https://stats.idre.ucla.edu/stata/output/regression-analysis/ */
+>  
+.                 
+.         * Finally, we can conduct some basic analysis of the residuals. 
+.         
+.         rvfplot, jitter(5)      
+
+.         
+.         * Already, we can see evidence of heteroskedasticity here -- the spread 
+> of
+.         * residuals is definitely not the same throughout the plot, having a muc
+> h
+.         * looser fit for lower values of father's education (which makes a great
+>  
+.         * deal of sense: there are other variables that we are definitely omitti
+> ng
+.         * from the analysis. One relevant one is simply a person's age, as the 
+.         * relative importance of completing high school has increased markedly o
+> ver
+.         * time -- meaning that even people who have fathers with little formal e
+> duc.
+.         * still face a lot of pressure to get at least that much education.
+.         
+.                 * Note, of course, that regular regression of residuals on the X
+> -variable
+.                 * is pointless since we get the OLS estimates precisely by forci
+> ng the 
+.                 * residuals to have zero correlation to the predictor -- but we 
+> could
+.                 * add a non-linear regression line to look for non-linearities. 
+> To do
+.                 * that, we need to do a lot more work, so I'll skip that here.  
+.                 
+.         * Brief addendum on outliers: although the Tukey rule is a very offhand
+.         * one that does *not* mean that the data-points in question "should" be
+.         * dropped, it may be useful to pull up the outliers in question. Here's
+.         * how we can do that using return values. 
+.         
+.         quietly sum educ, d
+
+.                 * "Quietly" tells Stata that we don't need it to display the out
+> put
+.                 * which is useful since we just want the results in Stata's memo
+> ry.
+.         scalar LBed = r(p25) - ((r(p75)-r(p25))*1.5)
+
+.                 * "Scalar" is a way to store a number in Stata with a more-helpf
+> ul
+.                 * name in English; here, I simply write "LBed" for "lower bound 
+> of ed."
+.                 * "R(p25)" returns the 25th percentile; r(mean) returns the mean
+> ; 
+.                 * r(sd) returns the SD, etc. For a full list of the values retur
+> ned
+.                 * by a command -- and, remember, to access these, you must invok
+> e them
+.                 * _right_ after the commmand which produces them -- see the help
+>  file. 
+.         scalar UBed = r(p75) + ((r(p75)-r(p25))*1.5)
+
+.         di LBed 
+6
+
+.                 // we can see what the LB is by telling Stata to display the con
+> tents
+.                 // of the scalar we made. 
+.         di UBed
+22
+
+.         
+.         * Now, if we did want to drop those outliers, we could do that -- althou
+> gh
+.         * note that dropping such individuals should be done very cautiously. On
+> e
+.         * alternative is to just make a new variable and make people missing on 
+.         * that new variable. 
+.         
+.         gen educ_no_OL = educ if (educ >LBed & educ <UBed)
+(51 missing values generated)
+
+.                 * "gen", short for generate, just makes a new variable. 
+.                 * "if" tells Stata what conditions to watch out for -- here, tha
+> t educ
+.                 * is greater than the lower-bound and less than the upper-bound.
+>  
+.         
+.         * We can verify that, on this new variable, all observations are between
+.         * the bounds of the outlier cutoffs. I don't think we should actually us
+> e
+.         * this variable here since I don't think we should drop the outliers, bu
+> t
+.         * it is useful to see that what we've done works. 
+.         
+.         sum educ_no_OL, d
+
+                         educ_no_OL
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            8              7
+ 5%           10              7
+10%           11              7       Obs               2,297
+25%           12              7       Sum of Wgt.       2,297
+
+50%           14                      Mean           13.93383
+                        Largest       Std. Dev.      2.636842
+75%           16             20
+90%           18             20       Variance       6.952936
+95%           19             20       Skewness       .2211185
+99%           20             20       Kurtosis        2.70651
+
+.         
+.                 * We can verify that those people outside the boundaries were re
+> placed
+.                 * as missings in the following way. 
+.                 
+.                 sort educ // we do this to get the data sorted by value of educa
+> tion
+
+.                 list educ educ_no_OL in 1/25
+
+     +-----------------+
+     | educ   educ_n~L |
+     |-----------------|
+  1. |    0          . |
+  2. |    0          . |
+  3. |    0          . |
+  4. |    0          . |
+  5. |    1          . |
+     |-----------------|
+  6. |    1          . |
+  7. |    2          . |
+  8. |    2          . |
+  9. |    2          . |
+ 10. |    2          . |
+     |-----------------|
+ 11. |    3          . |
+ 12. |    3          . |
+ 13. |    3          . |
+ 14. |    3          . |
+ 15. |    3          . |
+     |-----------------|
+ 16. |    3          . |
+ 17. |    3          . |
+ 18. |    3          . |
+ 19. |    3          . |
+ 20. |    3          . |
+     |-----------------|
+ 21. |    4          . |
+ 22. |    4          . |
+ 23. |    4          . |
+ 24. |    4          . |
+ 25. |    4          . |
+     +-----------------+
+
+.                         * Be careful with "list" as it lists out all observation
+> s, which is
+.                         * often going to produce massive amounts of output. Here
+> , I do it
+.                         * cautiously by having Stata list only those observation
+> s between
+.                         * 1 and 25, and I only do it after meaningfully sorting 
+> the data.
+.                         
+.         * Finally, note one Stata "gotcha" about missing values. MVs are represe
+> nted
+.         * internally as arbitrarily-large numbers. This can lead to some *very* 
+.         * unexpected behavior. Let's see an example. Suppose we want to find out
+.         * how many people's fathers had more than 16 years of education.
+.         
+.         count if paeduc>16
+  806
+
+.                 * Woah -- that's pretty big. Have we maybe made a mistake? Check
+>  the 
+.                 * frequency table...
+.         tab paeduc
+
+    highest |
+year school |
+ completed, |
+     father |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |         42        2.49        2.49
+          1 |          1        0.06        2.55
+          2 |         12        0.71        3.26
+          3 |         33        1.96        5.22
+          4 |         15        0.89        6.11
+          5 |         25        1.48        7.59
+          6 |         64        3.79       11.38
+          7 |         33        1.96       13.34
+          8 |        112        6.64       19.98
+          9 |         47        2.79       22.76
+         10 |         54        3.20       25.96
+         11 |         50        2.96       28.93
+         12 |        596       35.33       64.26
+         13 |         55        3.26       67.52
+         14 |        136        8.06       75.58
+         15 |         29        1.72       77.30
+         16 |        238       14.11       91.40
+         17 |         19        1.13       92.53
+         18 |         65        3.85       96.38
+         19 |         13        0.77       97.15
+         20 |         48        2.85      100.00
+------------+-----------------------------------
+      Total |      1,687      100.00
+
+.                 * We definitely have far fewer than 806 fathers with education>1
+> 6.
+.         
+.         * So, what's happened here is that were insufficiently cautious about ou
+> r
+.         * conditional statement: Stata included not only people whose fathers ha
+> d 
+.         * more than 16 years of education here but also all missings as well. We
+.         * instead need to write, when we use greater-than comparisons...
+.         
+.         count if paeduc>16 & !missing(paeduc)
+  145
+
+.                 * This produces the same result we would get by hand from our ta
+> ble. 
+.         
+.         * PRODUCING PUBLICATION-QUALITY GRAPHS. 
+.         
+.         * In this section, I will show you how to get graphics looking roughly l
+> ike
+.         * those I produce for my lectures, which--if I say so myself--significan
+> tly
+.         * improve upon Stata's default. 
+.         
+.         * The first step is setting a better scheme. We'll follow the approach o
+> f
+.         * data-viz. guru Edward Tufte, which is conveniently embodied in a speci
+> fic 
+.         * Stata scheme. Here's more on schemes: 
+.         view browse ///
+>                         https://www.stata.com/meeting/germany18/slides/germany18
+> _Jann.pdf
+
+.                 
+.         * We'll need to install the scheme first. 
+.         
+.         ssc install scheme_tufte
+checking scheme_tufte consistency and verifying not already installed...
+all files already exist and are up to date.
+
+.         
+.         set scheme tufte
+
+.         
+.         * Now, let's first try getting the scatterplot looking a bit nicer. 
+.         * Personally, I think primary colors for the markers + B/W background is
+>  
+.         * the easiest on the eyes. Here, I show simpler syntax for scatter so th
+> at
+.         * we have fewer parentheses to keep track of. We'll also add a title to 
+> both
+.         * axes as well as an overall title, modifying the size as needed. We'll 
+> also
+.         * print a note giving the source and sample size. You can simply write d
+> own
+.         * the n, but if you also want to, say, add the regression equation and 
+.         * correlation coefficient, a nice method is to store them in what is kno
+> wn
+.         * as a macro, or a container that we can give a text name to for conveni
+> ence.
+.         
+.         * I'll let you decide how much of this automation you want to use vs. to
+.         * what extent you want to just paste things in. You can even use the 
+.         * point-and-click graph editor. But, here is what your graphs _must_ hav
+> e...
+.         /* 
+>                 1. Titles -- overall, X-ax, Y-ax
+>                 2. Note with a source
+>                 3. Some attention to detail -- jitter if needed, probably remove
+>  legend
+>                 4. Mess around with the color a bit if you use a minimalist sche
+> me.  
+>                 
+>         What you *can* opt out of is using the macros -- you can just past in th
+> e
+>         sample size if you want. You also don't need to put the regression equat
+> ion 
+>         on there. If you don't want to learn this optional material, just focus 
+> on
+>         the material directly below. */ 
+.         
+.         * Graphs without the convenience (but also learning curve) of macros.
+.         
+.         * If you don't want to use macros, you can just hand enter relevant valu
+> es 
+.         * into the post-graph options, though it is more tedious. Below the 
+.         * code, I explain what each piece means. All of these values I obtain
+.         * from the regression output given just beforehand. The three forward sl
+> ashes
+.         * extend commands beyond a given line for readability; they are necessar
+> y
+.         * because Stata otherwise regards the end of a line as the end of a comm
+> and. 
+.         
+.         reg educ paeduc
+
+      Source |       SS           df       MS      Number of obs   =     1,687
+-------------+----------------------------------   F(1, 1685)      =    346.24
+       Model |  2446.10818         1  2446.10818   Prob > F        =    0.0000
+    Residual |  11904.2463     1,685   7.0648346   R-squared       =    0.1705
+-------------+----------------------------------   Adj R-squared   =    0.1700
+       Total |  14350.3545     1,686  8.51147952   Root MSE        =     2.658
+
+------------------------------------------------------------------------------
+        educ |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      paeduc |   .2903982   .0156066    18.61   0.000     .2597879    .3210085
+       _cons |   10.67243   .1964226    54.33   0.000     10.28717    11.05769
+------------------------------------------------------------------------------
+
+.         
+.         scatter educ paeduc, jitter(5) mcolor(red) legend(off) ///
+>                 xtitle("Father's education (years)") ///
+>                 ytitle("Respondent's education (years)")  ///
+>                 title("Relationship of father's and child's education", size(med
+> ium)) ///
+>                 note("Source: GSS 2018. {it:n} = 1687") ///
+>                 text(5 15 "Estimated regression equation" ///
+>                 "{it:Y} = 0.29{it:X} + 10.67" ///
+>                 "{it:R} {superscript:2} = 0.17", box fcolor(white)) || lfit educ
+>  paeduc
+
+.                 
+.                 * First, we explain jitter above. "mcolor(colorname)" sets the c
+> olor
+.                 * of markers; a list of colors you can invoke is here:  
+.                         * https://www.stata.com/manuals/g-4colorstyle.pdf#g-4col
+> orstyle
+.                 * "legend(off)" removes the legend, which is generally not too h
+> elpful
+.                 * relative to simply labeling the axes, which is what "xtitle("t
+> ext")",
+.                 * etc. do. "note("text")" adds an explanatory note to the graph,
+>  while
+.                 * the option "text(ycoord xcoord "line1text" "line2text") puts t
+> ext inside
+.                 * of the graph itself, which helps economize on space. Finally, 
+> the use
+.                 * of braces, e.g. {it:text} puts text in italics, superscripts t
+> ext, etc.
+.         
+.         * Graphs using the convenience of macros.
+.         
+.         * First, let's run the regression to get the results in Stata's memory. 
+.         * We can add the prefix "qui" for quietly since we don't necessarily wan
+> t
+.         * to see the output for this purpose. 
+.         
+.         qui reg educ paeduc
+
+.         
+.         * Now we need to run the next part all in one ago -- macros don't stick 
+.         * around in working memory beyond a single "run" of a .do-file or portio
+> n
+.         * thereof. So, the contents of the local will be deleted after we run th
+> is.
+.         
+.         * Macros are containers for numbers or text. The general syntax for maki
+> ng 
+.         * them for numbers is "local [macroname] = expression". Here, that lets 
+> us
+.         * just store the return values from our analysis without having to write
+>  
+.         * down actual numbers, which can be annoying. 
+.         
+.         local n = e(N) 
+
+.                 // the difference between r(N) and e(N) is a computer sciencey t
+> hing. 
+.         matrix coeffs = e(b) 
+
+.                 // the coefficients are a vector so we store them like so. 
+.                 // Now we'll pull out those elements and put them in macros whil
+> e 
+.                 // also rounding for readability. 
+.         local slope = round(coeffs[1, 1], .01)
+
+.                 * This puts the first coefficient, which has matrix coordinates 
+> [1, 1]
+.                 * in a local called "slope" while also rounding it to the hundre
+> dths'
+.                 * place. We'll do the same for the intercept.
+.         local intercept = round(coeffs[1, 2], .01)
+
+.         local r2 = round(e(r2), 0.01)
+
+.                 * R^2 is just a scalar still. 
+.                 
+.         * We print the contents of macros like this: 
+.         
+.         di `n' 
+1687
+
+.         di `slope'
+.29
+
+.         
+.                 * we use a left tick (next to the "!/1" key) and a right-tick to
+>  enclose
+.                 * the macro. Otherwise, nothing will happen (at best; at worst, 
+> an error)
+.         
+.         * Finally, we'll put it all together. Note that we'll need line extender
+> s,
+.         * which are the three forward slashes. I'll also turn the legend off sin
+> ce 
+.         * it is typically not that useful. Note a couple of other small things, 
+> e.g.
+.         * that to get italics or other special fonts, we write things like {it: 
+> text}.
+.         
+.         scatter educ paeduc, jitter(5) mcolor(red) xtitle("Father's education (y
+> ears)") ///
+>                 ytitle("Respondent's education (years)") legend(off) ///
+>                 title("Relationship of father's and child's education", size(med
+> ium)) ///
+>                 note("Source: GSS 2018. {it:n} = `n'") ///
+>                 text(5 15 "Estimated regression equation" ///
+>                 "{it:Y} = `slope'{it:X} + `intercept'" ///
+>                 "{it:R} {superscript:2} = `r2'", box fcolor(white)) || lfit educ
+>  paeduc
+
+. 
+end of do-file
+
+. do "/var/folders/bx/gmg8gqm9629_5lp7mm91v8s00000gn/T//SD01140.000000"
+
+. /*      
+> SOC 360, Fall 2022, DAP I.      
+> task: demonstrate analysis of interval/ratio outcome, categorical predictor
+> author: Griffin JM Bur, 2022-10-10 */
+. 
+. ********* DAP I *********
+. 
+. 
+. ************ Coding etiquette / basic set-up ************ 
+. 
+.         /* See the first video in this tutorial series for an explanation of all
+>         of these steps. */
+.         
+.         capture log close 
