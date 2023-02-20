@@ -1,0 +1,17 @@
+Salary,Staus,Count
+No income,Single,5514
+"1-49,999",Single,24827
+"50,000-99,999",Single,6359
+"100,000 and over",Single,2076
+No income,Married,1933
+"1-49,999",Married,30609
+"50,000-99,999",Married,21546
+"100,000 and over",Married,14332
+No income,Divorced,552
+"1-49,999",Divorced,5917
+"50,000-99,999",Divorced,2895
+"100,000 and over",Divorced,1276
+No income,Widowed,136
+"1-49,999",Widowed,2437
+"50,000-99,999",Widowed,629
+"100,000 and over",Widowed,265

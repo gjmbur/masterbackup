@@ -1446,7 +1446,7 @@ foreach `scheme' of tufte lean blind 538 plotplain {
 	gr combine loglin og, note("Source: NHANES 2017-18, {it: n} = `e(N)'") ///
 		title("Relationship between weight and height")
 		
-		
+	
 		
 	
 	* basic two-way tables

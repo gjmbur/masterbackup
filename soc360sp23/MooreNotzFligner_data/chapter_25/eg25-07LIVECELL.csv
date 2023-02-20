@@ -1,0 +1,11 @@
+LivingSituation,PhoneService,Count
+Live with parents,Landline sample,165
+Rent,Landline sample,95
+Own,Landline sample,46
+Live in a dorm,Landline sample,7
+Other/refused,Landline sample,16
+Live with parents,Cell-only sample,25
+Rent,Cell-only sample,74
+Own,Cell-only sample,13
+Live in a dorm,Cell-only sample,15
+Other/refused,Cell-only sample,3
