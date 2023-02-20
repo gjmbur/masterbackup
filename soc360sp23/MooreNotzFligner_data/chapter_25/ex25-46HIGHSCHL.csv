@@ -1,0 +1,16 @@
+Parents,Schools,Count
+Black,excellent,12
+Black,good,69
+Black,fair,75
+Black,poor,24
+Black,don'tknow,22
+Hispanic,excellent,34
+Hispanic,good,55
+Hispanic,fair,61
+Hispanic,poor,24
+Hispanic,don'tknow,28
+White,excellent,22
+White,good,81
+White,fair,60
+White,poor,24
+White,don'tknow,14

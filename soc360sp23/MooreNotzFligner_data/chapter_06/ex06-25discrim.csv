@@ -1,0 +1,9 @@
+Verdict,RaceDef,RaceVic,Count
+Death,White,White,19
+Not,White,White,132
+Death,White,Black,0
+Not,White,Black,9
+Death,Black,White,11
+Not,Black,White,52
+Death,Black,Black,6
+Not,Black,Black,97

@@ -1,0 +1,13 @@
+Condition,Errors,Count
+Soc-Comm,0,0
+Non_Comm,0,5
+Non_Soc,0,8
+Soc-Comm,1,3
+Non_Comm,1,3
+Non_Soc,1,2
+Soc-Comm,2,3
+Non_Comm,2,1
+Non_Soc,2,2
+Soc-Comm,3,6
+Non_Comm,3,3
+Non_Soc,3,0

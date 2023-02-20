@@ -1,0 +1,9 @@
+Age,Phone,Count
+Age18-29,Landline,335
+Age30-49,Landline,1242
+Age50-64,Landline,1625
+Age65up,Landline,1481
+Age18-29,CellOnly,374
+Age30-49,CellOnly,347
+Age50-64,CellOnly,146
+Age65up,CellOnly,36

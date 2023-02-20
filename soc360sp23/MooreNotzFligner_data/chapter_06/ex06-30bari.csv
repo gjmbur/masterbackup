@@ -1,0 +1,10 @@
+Surgery,Complication,Count
+banding,non life-threatening,81
+banding,serious,46
+banding,none,5253
+gastrectomy,non life-threatening,31
+gastrectomy,serious,19
+gastrectomy,none,804
+bypass,non life-threatening,606
+bypass,serious,325
+bypass,none,8110
