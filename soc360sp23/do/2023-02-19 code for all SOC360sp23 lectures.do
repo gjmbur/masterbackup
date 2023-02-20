@@ -1421,6 +1421,38 @@ foreach `scheme' of tufte lean blind 538 plotplain {
 	svyset [pweight=wtint2yr]
 	set scheme gg_hue
 	
+	clear all
+	cd ~/desktop/code/soc360sp23
+	capture mkdir ./data/nhanes2011
+	cd ./data/nhanes2011
+	copy "https://wwwn.cdc.gov/Nchs/Nhanes/2011-2012/BMX_G.XPT" ., replace
+	import sasxport5 BMX_G.XPT
+	save nhanes2011, replace
+	local filenames "BPX_G SPX_G"
+	foreach name of local filenames {
+		di `"https://wwwn.cdc.gov/Nchs/Nhanes/2011-2012/`name'.XPT"'
+		copy https://wwwn.cdc.gov/Nchs/Nhanes/2011-2012/`name'.XPT ///
+			`name'.XPT, replace
+		import sasxport5 `name'.XPT, clear
+		merge 1:1 seqn using nhanes2011, nogen
+		save nhanes2011, replace
+		}
+	use nhanes2011
+	
+	local vars = "bpxsy1 bpxsy2"
+	reg `vars'
+	matrix coeffs = e(b)
+	local realslope = coeffs[1, 1]
+	local realintercept = coeffs[1, 2]
+	local slope = round(coeffs[1, 1], .01)
+	local intercept = round(coeffs[1, 2], .01)
+	local r = round(sqrt(e(r2)), 0.01)
+	scatter `vars', title("Log-lin model", ///
+		size(medium)) || lfit `vars', ///
+		legend(off) ytitle("Weight (kg, natural log)") ///
+		text(5.5 75 `"{it:Y} = `slope'{it:X} + `intercept'"' ///
+		`"{it:r} = `r'"', box fcolor(white))
+	
 	gen logweight = ln(bmxwt)
 	corr logweight bmxht, cov
 	local vars = "logweight bmxht"
