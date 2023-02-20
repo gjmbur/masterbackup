@@ -1,0 +1,9 @@
+District,Race,Status,Count
+Rotorua,Maori,In,79
+Rotorua,Maori,Not in,8810
+Rotorua,NonMaori,In,258
+Rotorua,NonMaori,Not in,23751
+Nelson,Maori,In,1
+Nelson,Maori,Not in,1328
+Nelson,NonMaori,In,56
+Nelson,NonMaori,Not in,32602

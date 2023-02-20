@@ -1,0 +1,11 @@
+HearingLoss,eGFR,Count
+yes,Lessthan45,76
+no,Lessthan45,27
+yes,45-60,203
+no,45-60,207
+yes,60-75,363
+no,60-75,717
+yes,75-90,147
+no,75-90,458
+yes,Greaterthan90,71
+no,Greaterthan90,295

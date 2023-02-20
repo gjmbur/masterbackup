@@ -1,0 +1,67 @@
+--------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/griffinjmbur/Desktop/Code/soc360sp23/2023-02-24_Bur_SOC360sp23_HW3
+> .log
+  log type:  text
+ opened on:  19 Feb 2023, 19:06:56
+
+.         
+.         * THIS MUST GO TO A PATH ON YOUR COMPUTER!
+.         * This makes a text file of your session, including commands run 
+.         * from the .do-file and those run from the command window. 
+.         
+. clear all 
+
+.         
+.         * This might seem scary -- it deletes all data in memory. Why should it
+.         * NOT scare you? You should have made all changes to the data in a do-file
+.         * making it pointless to actually save the data as a new data-set. 
+.         
+. * Question 5.4a
+.         * YOU MUST HAVE DOWNLOADED THE DATA AND PUT IT IN THE FOLDER TO WHICH 
+.         * YOU "CHANGED DIERCTORY"
+.         use coral
+
+.         
+.         * Your work should go here...
+.         * Skipping ahead ...
+. 
+. * "Regression Diagnostics 2"
+.         * ... there will be work for questions before this one ...
+. 
+.         sysuse auto, clear
+(1978 automobile data)
+
+.         reg length weight, nohead
+------------------------------------------------------------------------------
+      length | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+      weight |   .0271028   .0010944    24.76   0.000     .0249211    .0292845
+       _cons |   106.0965   3.410866    31.11   0.000     99.29708     112.896
+------------------------------------------------------------------------------
+
+.                 // option "nohead" suppresses some output that we don't currently ne
+> ed
+.         gen yhat = 106.0965 + 0.0271028*weight // note: I get these from the output
+
+.         gen residual = length - yhat
+
+.         sum residual
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    residual |         74    .0001264    7.217443  -24.45163   12.53903
+
+.         corr residual weight
+(obs=74)
+
+             | residual   weight
+-------------+------------------
+    residual |   1.0000
+      weight |   0.0000   1.0000
+
+
+. 
+end of do-file
+
+. exit, clear
