@@ -1417,6 +1417,7 @@ foreach `scheme' of tufte lean blind 538 plotplain {
 * L7. two-way tables. 
 	* regression review
 	
+	* All of this ended up just being draft work. 
 	use ./data/nhanes_bigmerge, clear
 	svyset [pweight=wtint2yr]
 	set scheme gg_hue
@@ -1437,9 +1438,12 @@ foreach `scheme' of tufte lean blind 538 plotplain {
 		merge 1:1 seqn using nhanes2011, nogen
 		save nhanes2011, replace
 		}
-	use nhanes2011
 	
-	local vars = "bpxsy1 bpxsy2"
+	cd ~/desktop/code/soc360sp23
+
+	use ./data/nhanes2011/nhanes2011
+	
+	local vars = "bpxsy2 bpxsy1"
 	reg `vars'
 	matrix coeffs = e(b)
 	local realslope = coeffs[1, 1]
@@ -1449,7 +1453,7 @@ foreach `scheme' of tufte lean blind 538 plotplain {
 	local r = round(sqrt(e(r2)), 0.01)
 	scatter `vars', title("Log-lin model", ///
 		size(medium)) || lfit `vars', ///
-		legend(off) ytitle("Weight (kg, natural log)") ///
+		legend(off) ytitle("Measurement 1 (kg, natural log)") ///
 		text(5.5 75 `"{it:Y} = `slope'{it:X} + `intercept'"' ///
 		`"{it:r} = `r'"', box fcolor(white))
 	
