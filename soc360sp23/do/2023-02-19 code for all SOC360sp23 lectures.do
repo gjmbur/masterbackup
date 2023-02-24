@@ -1481,7 +1481,29 @@ foreach `scheme' of tufte lean blind 538 plotplain {
 		"`=ustrunescape("\u0059\u0302")'= {it:e}{superscript: 1.0227*height + 1.7913}") 
 	gr combine loglin og, note("Source: NHANES 2017-18, {it: n} = `e(N)'") ///
 		title("Relationship between weight and height")
-		
+	* end draft work 
+	
+	cd ~/desktop/code/soc360sp23
+	use ./data/gss2018, clear
+	set scheme tufte
+	drop if missing(educ) | missing(speduc) | sex !=1
+	reg speduc educ
+	sum educ speduc
+	local vars = "speduc educ"
+	reg `vars'
+	local r = ("`: display %10.4f sqrt(e(r2))'")
+
+	scatter speduc educ, jitter(5) mcolor(green%80) ///
+		title("Relation between men's education and spouse's", ///
+		size(medium)) ///
+		xtitle("Highest education achieved (years, men only)") ///
+		ytitle("Spouse's education (years)") legend(off) ///
+		|| lfit speduc educ, lp(dash_dot) ///
+		text(12.5 2.5 "{it:r} = `r'", box) ///
+		note("Source: GSS 2018, {it:n} = `e(N)'")
+	
+	sum educ speduc
+	
 	
 		
 	
