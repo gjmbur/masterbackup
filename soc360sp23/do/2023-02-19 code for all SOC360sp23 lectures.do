@@ -1767,6 +1767,9 @@ foreach `scheme' of tufte lean blind 538 plotplain {
 
 * L8: sampling
 
+	use ./data/gss2018, clear
+	tabulate madeg degree, col nofreq 
+
 	use ~/desktop/soc365sp22/original_data/cps2019, clear
 	set scheme gg_hue
 	set seed 20221005
