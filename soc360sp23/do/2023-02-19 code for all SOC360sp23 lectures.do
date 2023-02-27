@@ -1814,20 +1814,21 @@ foreach `scheme' of tufte lean blind 538 plotplain {
 		asyvars ylab(0(10)70) ///
 		note("Source: GSS 2018, {it:n} = `r(N)'" "Eligible voters only")
 	
-	use ./original_data/gss2018, clear // We'll use this as an example 
+	use ./data/gss2018, clear // We'll use this as an example 
 	tempfile bargraphdata // This makes what is basically a temporary data-set
 	save `bargraphdata', emptyok // we'll save this
 	preserve 
 		// I showed preserve just a couple times very briefly. It basically makes
 		// it possible to do some destructive to the data-set (which might be useful
 		// in the short-run, as it is here), then restore it. 
+	drop if missing(natfare)
 	contract natfare
-		// What this does is reduce the data-set to just two variables, abany (which
+		// What this does is reduce the data-set to just two variables, natfare (which
 		// now has as "observations" the distinct possible responses) and _freq 
 		// (which has as "observations" the number of people in each bucket). 
 	local var_label: variable label natfare
 		// Here, I use the "extended macro function" called "variable label" to store
-		// the variable label for abany in the the local "var_label". 
+		// the variable label for -natfare- in the the local "var_label". 
 	egen sh_natfare = pc(_freq)
 		// This calculates percentages from those frequencies. 
 	label var sh_natfare "share of `var_label'"
@@ -1844,6 +1845,7 @@ foreach `scheme' of tufte lean blind 538 plotplain {
 	* updated data. 
 	foreach Xj of varlist natfarey { 
 			preserve
+			drop if missing(`Xj')
 			contract `Xj'
 			local var_label: variable label `Xj'
 			egen sh_`Xj' = pc(_freq)
